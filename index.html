@@ -10,67 +10,82 @@
 <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
 <style>
   :root{
-    --paper:#FBF3E2; --paper-2:#F4E7CC;
-    --ink:#2B2520; --ink-soft:#5A5046;
-    --g1:#4FB0E8; --g2:#7CC36A; --g3:#E8884E; /* 학년별 색 */
-    --sun:#FFC847; --red:#E8584E; --mint:#39C2C9;
-    --gator:#7CC36A; --gator-d:#4E9E48; --gator-belly:#E9F5C9;
+    --paper:#FBF3E2;--paper-2:#F4E7CC;
+    --ink:#2B2520;--ink-soft:#5A5046;
+    --g2:#7CC36A;--g3:#E8884E;
+    --sun:#FFC847;--red:#E8584E;--mint:#39C2C9;
+    --gator:#7CC36A;--gator-d:#4E9E48;--gator-belly:#E9F5C9;
     --shadow:6px 6px 0 var(--ink);
-    --display:'Jua',sans-serif; --hand:'Gaegu',cursive; --body:'Gowun Dodum',sans-serif;
+    --display:'Jua',sans-serif;--hand:'Gaegu',cursive;--body:'Gowun Dodum',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{
-    font-family:var(--body); color:var(--ink); background:var(--paper);
-    background-image:radial-gradient(var(--paper-2) 1.3px, transparent 1.4px);
-    background-size:14px 14px; line-height:1.7; padding-bottom:50px;
-  }
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);
+    background-image:radial-gradient(var(--paper-2) 1.3px,transparent 1.4px);background-size:14px 14px;line-height:1.7;padding-bottom:50px}
   .wrap{max-width:980px;margin:0 auto;padding:0 18px}
   a{color:inherit;text-decoration:none}
+  [hidden]{display:none!important}
+  .gator .teeth{fill:#fff}.gator .mouth{fill:#9B3B3B}.gator .eyew{fill:#fff}.gator .pupil{fill:var(--ink)}
+  .gator .body{fill:var(--gator)}.gator .bodyd{fill:var(--gator-d)}.gator .belly{fill:var(--gator-belly)}
 
-  /* hero */
-  header{text-align:center;padding:54px 18px 26px;position:relative}
-  header .sky{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%, #FFE9B0 0%, transparent 62%);z-index:-1}
+  /* ---------- LANDING ---------- */
+  #landing{text-align:center;padding:46px 18px 60px;position:relative;min-height:90vh}
+  #landing .sky{position:absolute;inset:0;background:radial-gradient(120% 70% at 50% 0%,#FFE9B0 0%,transparent 60%);z-index:-1}
   .brand{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
   .brand .logo{width:84px}
-  header h1{font-family:var(--display);font-size:clamp(40px,9vw,72px);line-height:1;text-shadow:4px 4px 0 var(--sun)}
-  header h1 .m{color:var(--gator-d)}
-  header .slogan{font-family:var(--hand);font-size:22px;color:var(--ink-soft);font-weight:700;margin-top:6px}
-  header p.intro{max-width:560px;margin:14px auto 0;color:var(--ink-soft);font-size:16px}
-  .stat{display:inline-block;margin-top:16px;background:var(--ink);color:var(--paper);font-family:var(--display);
-    padding:7px 18px;border-radius:999px;font-size:15px;transform:rotate(-1.5deg)}
-  .stat b{color:var(--sun)}
+  .logo .gator{animation:bob 3s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+  #landing h1{font-family:var(--display);font-size:clamp(40px,9vw,72px);line-height:1;text-shadow:4px 4px 0 var(--sun)}
+  #landing h1 .m{color:var(--gator-d)}
+  #landing .slogan{font-family:var(--hand);font-size:22px;color:var(--ink-soft);font-weight:700;margin-top:6px}
 
-  /* sticky grade nav */
-  .gradenav{position:sticky;top:0;z-index:20;background:rgba(251,243,226,.92);backdrop-filter:blur(6px);
-    border-bottom:3px solid var(--ink);padding:10px 0;margin-top:22px}
-  .gradenav .inner{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-  .gtab{font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:#fff;border-radius:999px;
-    padding:7px 22px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .12s}
-  .gtab:hover{transform:translate(-1px,-1px)}
-  .gtab[data-g="중1"]{background:#E3F3FD}
-  .gtab[data-g="중2"]{background:#EAF7E6}
-  .gtab[data-g="중3"]{background:#FDEEE3}
+  .pick{margin-top:40px}
+  .pick .q{font-family:var(--display);font-size:24px;margin-bottom:16px}
+  .pick .q small{display:block;font-family:var(--hand);font-size:16px;color:var(--ink-soft);font-weight:700;margin-top:2px}
+  .gradebtns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+  .gradebtn{font-family:var(--display);font-size:30px;color:#fff;border:4px solid var(--ink);border-radius:20px;
+    padding:24px 40px;cursor:pointer;box-shadow:var(--shadow);transition:transform .14s}
+  .gradebtn:hover{transform:translate(-2px,-2px)}
+  .gradebtn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+  .gradebtn.g2{background:var(--g2)}.gradebtn.g3{background:var(--g3)}
+  .gradebtn.sel{outline:5px solid var(--sun);outline-offset:3px}
 
-  /* grade section */
-  .grade{margin-top:44px;scroll-margin-top:74px}
-  .grade-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-  .grade-badge{font-family:var(--display);font-size:26px;color:#fff;padding:8px 20px;border-radius:14px;
-    border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}
-  .g1 .grade-badge{background:var(--g1)} .g2 .grade-badge{background:var(--g2)} .g3 .grade-badge{background:var(--g3)}
-  .grade-head .desc{font-family:var(--hand);font-size:18px;color:var(--ink-soft);font-weight:700}
+  .pubpick{margin-top:40px}
+  .pubbtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .pubbtn{font-family:var(--display);font-size:22px;background:#fff;border:4px solid var(--ink);border-radius:16px;
+    padding:16px 28px;cursor:pointer;box-shadow:var(--shadow);transition:transform .14s}
+  .pubbtn:hover{transform:translate(-2px,-2px);background:var(--paper-2)}
+  .pubbtn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+  .pubbtn .badge{display:block;font-family:var(--body);font-size:12px;color:var(--ink-soft);font-weight:400;margin-top:4px}
 
-  /* unit grid */
-  .units{display:grid;gap:16px;grid-template-columns:1fr}
+  /* ---------- MENU ---------- */
+  .topbar{position:sticky;top:0;z-index:30;background:rgba(251,243,226,.94);backdrop-filter:blur(6px);
+    border-bottom:3px solid var(--ink);padding:10px 0}
+  .topbar .inner{max-width:980px;margin:0 auto;padding:0 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .topbar .home{display:flex;align-items:center;gap:8px;font-family:var(--display);font-size:20px}
+  .topbar .home .tg{width:34px}
+  .topbar .home .m{color:var(--gator-d)}
+  .switch{margin-left:auto;display:flex;gap:8px}
+  .chip{font-family:var(--display);font-size:16px;border:3px solid var(--ink);background:#fff;border-radius:999px;
+    padding:6px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .12s}
+  .chip:hover{transform:translate(-1px,-1px)}
+  .chip:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .chip.g2{background:#EAF7E6}.chip.g3{background:#FDEEE3}
+
+  .menu-head{text-align:center;margin:30px 0 8px}
+  .menu-head h2{font-family:var(--display);font-size:clamp(26px,5.5vw,38px)}
+  .menu-head .stat{display:inline-block;margin-top:10px;background:var(--ink);color:var(--paper);font-family:var(--display);
+    padding:6px 18px;border-radius:999px;font-size:14px;transform:rotate(-1deg)}
+  .menu-head .stat b{color:var(--sun)}
+
+  .units{display:grid;gap:16px;grid-template-columns:1fr;margin-top:24px}
   @media(min-width:640px){.units{grid-template-columns:1fr 1fr}}
   .unit{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:12px}
-  .unit.has .unit-top .uname{}
   .unit-top{display:flex;align-items:center;gap:10px}
   .unum{font-family:var(--display);width:34px;height:34px;flex:none;display:grid;place-items:center;border-radius:10px;color:#fff;font-size:16px;border:2.5px solid var(--ink)}
-  .g1 .unum{background:var(--g1)} .g2 .unum{background:var(--g2)} .g3 .unum{background:var(--g3)}
+  .g2 .unum,.unit.g2 .unum{background:var(--g2)}.g3 .unum,.unit.g3 .unum{background:var(--g3)}
   .uname{font-family:var(--display);font-size:19px}
   .badge-ready{margin-left:auto;font-family:var(--display);font-size:12px;background:var(--sun);border:2px solid var(--ink);border-radius:999px;padding:2px 10px}
-
   .lessons{display:flex;flex-direction:column;gap:10px}
   .lesson{display:flex;align-items:center;gap:12px;border:3px solid var(--ink);border-radius:13px;padding:11px 13px;
     background:linear-gradient(180deg,#FFFDF6,#FFF4DE);transition:transform .14s, box-shadow .14s;box-shadow:3px 3px 0 var(--ink)}
@@ -83,16 +98,12 @@
   .soon{display:flex;align-items:center;gap:10px;border:3px dashed #C9BCA4;border-radius:13px;padding:12px 14px;color:#A99B82;font-family:var(--display);font-size:15px;background:repeating-linear-gradient(45deg,#fff,#fff 8px,#FBF3E2 8px,#FBF3E2 16px)}
 
   footer{text-align:center;margin-top:56px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
-
-  .gator .teeth{fill:#fff}.gator .mouth{fill:#9B3B3B}.gator .eyew{fill:#fff}.gator .pupil{fill:var(--ink)}
-  .gator .body{fill:var(--gator)}.gator .bodyd{fill:var(--gator-d)}.gator .belly{fill:var(--gator-belly)}
-  .logo .gator{animation:bob 3s ease-in-out infinite}
-  @keyframes bob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-7px) rotate(2deg)}}
 </style>
 </head>
 <body>
 
-<header>
+<!-- ============ LANDING ============ -->
+<section id="landing">
   <div class="sky"></div>
   <div class="wrap">
     <div class="brand">
@@ -100,115 +111,169 @@
       <h1>Math<span class="m">Motion</span></h1>
     </div>
     <div class="slogan">움직임으로 배우는 중학 수학 🐊</div>
-    <p class="intro">외우지 말고 <b>원리</b>로! 웹툰으로 읽고, 직접 만지며 움직여 보면서<br>수학이 왜 그렇게 되는지 눈으로 이해하는 학습 사이트예요.</p>
-    <div class="stat" id="stat">레슨을 불러오는 중…</div>
+
+    <div class="pick">
+      <div class="q">먼저, 몇 학년이야?<small>학년을 골라줘</small></div>
+      <div class="gradebtns" id="gradeBtns"></div>
+    </div>
+
+    <div class="pubpick" id="pubPick" hidden>
+      <div class="q">어떤 교과서로 배워?<small id="pubGradeLbl"></small></div>
+      <div class="pubbtns" id="pubBtns"></div>
+    </div>
   </div>
-</header>
+</section>
 
-<nav class="gradenav">
-  <div class="inner" id="gradenav"></div>
-</nav>
-
-<main class="wrap" id="curriculum"></main>
-
-<footer>
-  MathMotion · 계속 새로운 레슨이 추가됩니다 ✏️
-</footer>
+<!-- ============ MENU ============ -->
+<section id="menu" hidden>
+  <div class="topbar">
+    <div class="inner">
+      <a class="home" href="#" id="homeBtn"><span class="tg" id="topGator"></span> <span>Math<span class="m">Motion</span></span></a>
+      <div class="switch">
+        <button class="chip" id="gradeChip">중2 ▾</button>
+        <button class="chip" id="pubChip">교학사 ▾</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="menu-head">
+      <h2 id="menuTitle">중2 · 교학사</h2>
+      <div class="stat" id="stat"></div>
+    </div>
+    <div class="units" id="units"></div>
+  </div>
+  <footer>외우지 말고 <b>원리</b>로! 계속 새로운 레슨이 추가됩니다 ✏️</footer>
+</section>
 
 <script>
-/* ---------- 교육과정 데이터 (레슨 추가 = 여기에 한 줄 + lessons/파일) ---------- */
-const CURRICULUM = [
-  { grade:'중1', cls:'g1', desc:'기초를 탄탄하게', units:[
-    {n:1, name:'수와 연산', lessons:[]},
-    {n:2, name:'문자와 식', lessons:[]},
-    {n:3, name:'좌표평면과 그래프', lessons:[]},
-    {n:4, name:'기본 도형', lessons:[]},
-    {n:5, name:'평면도형과 입체도형', lessons:[]},
-    {n:6, name:'통계', lessons:[]},
-  ]},
-  { grade:'중2', cls:'g2', desc:'교학사 교과서 기준', units:[
-    {n:1, name:'수와 식의 계산', lessons:[]},
-    {n:2, name:'부등식과 방정식', lessons:[
-      {emoji:'🐊', title:'부등호가 뒤집히는 진짜 이유', desc:'부등이의 거울 동굴 — 웹툰 + 거울 실험실', href:'lessons/ineq-mirror.html'},
-    ]},
-    {n:3, name:'일차함수', lessons:[
-      {emoji:'🪜', title:'y = ax + b 의 비밀', desc:'부등이의 계단 오르기 — a(기울기)와 b(절편) 실험실', href:'lessons/linear-stairs.html'},
-      {emoji:'🎯', title:'방정식 ax + b = 0 의 해', desc:'부등이, 땅에 닿다 — 해 = 그래프가 x축과 만나는 점', href:'lessons/linear-equation.html'},
-    ]},
-    {n:4, name:'도형의 성질', lessons:[]},
-    {n:5, name:'도형의 닮음', lessons:[]},
-    {n:6, name:'확률', lessons:[]},
-  ]},
-  { grade:'중3', cls:'g3', desc:'고등 수학 준비', units:[
-    {n:1, name:'실수와 그 계산', lessons:[]},
-    {n:2, name:'다항식과 인수분해', lessons:[]},
-    {n:3, name:'이차방정식', lessons:[]},
-    {n:4, name:'이차함수', lessons:[]},
-    {n:5, name:'삼각비', lessons:[]},
-    {n:6, name:'원의 성질', lessons:[]},
-  ]},
-];
+/* ---------- 레슨 풀 (개념 단위, 교과서 공유) ---------- */
+const LESSONS = {
+  'repeating-decimal':{emoji:'🔁', title:'분수는 왜 끝없이 반복될까?', desc:'부등이의 나눗셈 회전판 — 순환소수의 비밀', href:'lessons/repeating-decimal.html'},
+  'ineq-mirror':      {emoji:'🐊', title:'부등호가 뒤집히는 진짜 이유', desc:'부등이의 거울 동굴 — 웹툰 + 거울 실험실', href:'lessons/ineq-mirror.html'},
+  'linear-stairs':    {emoji:'🪜', title:'y = ax + b 의 비밀', desc:'부등이의 계단 오르기 — a(기울기)와 b(절편)', href:'lessons/linear-stairs.html'},
+  'linear-equation':  {emoji:'🎯', title:'방정식 ax + b = 0 의 해', desc:'부등이, 땅에 닿다 — 해 = 그래프가 x축과 만나는 점', href:'lessons/linear-equation.html'},
+};
+
+/* ---------- 교육과정: 학년 → 교과서 → 단원(순서) → 레슨 id ---------- */
+const CURRICULUM = {
+  '중2': {
+    '교학사': [
+      {n:1, name:'수와 식',          lessons:['repeating-decimal']},
+      {n:2, name:'부등식과 방정식',   lessons:['ineq-mirror']},
+      {n:3, name:'일차함수',          lessons:['linear-stairs','linear-equation']},
+      {n:4, name:'도형의 성질',       lessons:[]},
+      {n:5, name:'도형의 닮음',       lessons:[]},
+      {n:6, name:'확률',             lessons:[]},
+    ],
+    '천재교육': [
+      {n:1, name:'유리수와 순환소수',     lessons:['repeating-decimal']},
+      {n:2, name:'식의 계산',            lessons:[]},
+      {n:3, name:'부등식과 연립방정식',   lessons:['ineq-mirror']},
+      {n:4, name:'일차함수',             lessons:['linear-stairs','linear-equation']},
+      {n:5, name:'도형의 성질',          lessons:[]},
+      {n:6, name:'도형의 닮음',          lessons:[]},
+      {n:7, name:'확률',                lessons:[]},
+    ],
+  },
+  '중3': {
+    '동아출판사': [
+      {n:1, name:'실수와 그 계산',            lessons:[]},
+      {n:2, name:'다항식의 곱셈과 인수분해',   lessons:[]},
+      {n:3, name:'이차방정식',               lessons:[]},
+      {n:4, name:'이차함수와 그래프',         lessons:[]},
+      {n:5, name:'삼각비',                   lessons:[]},
+      {n:6, name:'원의 성질',                lessons:[]},
+      {n:7, name:'통계',                     lessons:[]},
+    ],
+  },
+};
+const GRADE_CLS = {'중2':'g2','중3':'g3'};
+const KEY_G='mm-grade', KEY_P='mm-pub';
 
 function gatorSVG(){
   return `<svg class="gator" viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg">
-    <path class="bodyd" d="M14 58 q-12 4 -8 16 q10 -2 16 -8 z"/>
-    <ellipse class="bodyd" cx="40" cy="78" rx="9" ry="7"/>
-    <path class="body" d="M52 50 Q30 18 16 36 Q6 52 22 64 Q34 74 56 64 Z"/>
-    <ellipse class="belly" cx="34" cy="60" rx="14" ry="9"/>
+    <path class="bodyd" d="M14 58 q-12 4 -8 16 q10 -2 16 -8 z"/><ellipse class="bodyd" cx="40" cy="78" rx="9" ry="7"/>
+    <path class="body" d="M52 50 Q30 18 16 36 Q6 52 22 64 Q34 74 56 64 Z"/><ellipse class="belly" cx="34" cy="60" rx="14" ry="9"/>
     <path class="mouth" d="M52 51 L122 22 L122 80 Z"/>
-    <path class="bodyd" d="M50 44 L120 18 Q128 18 126 28 L56 52 Z"/>
-    <path class="body" d="M52 58 L120 84 Q128 84 126 74 L58 54 Z"/>
+    <path class="bodyd" d="M50 44 L120 18 Q128 18 126 28 L56 52 Z"/><path class="body" d="M52 58 L120 84 Q128 84 126 74 L58 54 Z"/>
     <path class="teeth" d="M64 48 l5 7 l5 -9 l5 7 l5 -9 l5 7 l5 -9 l5 7 l5 -9 l4 6 l3 -7 l-52 19 z"/>
     <path class="teeth" d="M66 53 l4 -6 l5 8 l5 -6 l5 8 l5 -6 l5 8 l5 -6 l5 8 l4 -5 l3 6 l-55 -1 z" opacity=".95"/>
-    <circle class="body" cx="30" cy="30" r="11"/>
-    <circle class="eyew" cx="31" cy="29" r="7"/>
-    <circle class="pupil" cx="33" cy="30" r="3.6"/>
-    <circle class="eyew" cx="34.4" cy="28.6" r="1.2"/>
-    <circle class="pupil" cx="22" cy="44" r="2"/>
-    <circle cx="26" cy="50" r="4" fill="#ff9aa0" opacity=".55"/>
+    <circle class="body" cx="30" cy="30" r="11"/><circle class="eyew" cx="31" cy="29" r="7"/>
+    <circle class="pupil" cx="33" cy="30" r="3.6"/><circle class="eyew" cx="34.4" cy="28.6" r="1.2"/>
+    <circle class="pupil" cx="22" cy="44" r="2"/><circle cx="26" cy="50" r="4" fill="#ff9aa0" opacity=".55"/>
   </svg>`;
 }
+const esc=s=>(''+s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+const landingEl=document.getElementById('landing'), menuEl=document.getElementById('menu');
+const gradeBtns=document.getElementById('gradeBtns'), pubPick=document.getElementById('pubPick');
+const pubBtns=document.getElementById('pubBtns'), pubGradeLbl=document.getElementById('pubGradeLbl');
+let selGrade=null;
+
 document.getElementById('logo').innerHTML=gatorSVG();
+document.getElementById('topGator').innerHTML=gatorSVG();
 
-/* ---------- 렌더 ---------- */
-const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-let total=0;
-const navEl=document.getElementById('gradenav');
-const curEl=document.getElementById('curriculum');
-
-CURRICULUM.forEach((g,gi)=>{
-  const id='g'+(gi+1);
-  navEl.insertAdjacentHTML('beforeend',`<button class="gtab" data-g="${g.grade}" onclick="location.hash='${id}'">${g.grade}</button>`);
-
-  const unitsHTML=g.units.map(u=>{
-    const ready=u.lessons.length>0;
-    total+=u.lessons.length;
-    const inner = ready
-      ? `<div class="lessons">`+u.lessons.map(l=>
-          `<a class="lesson" href="${l.href}">
-             <span class="emoji">${l.emoji}</span>
-             <span class="meta"><span class="t">${esc(l.title)}</span><span class="d">${esc(l.desc)}</span></span>
-             <span class="go">▶ 시작</span>
-           </a>`).join('')+`</div>`
-      : `<div class="soon">🔒 준비 중이에요</div>`;
-    return `<div class="unit ${ready?'has':''}">
-      <div class="unit-top">
-        <span class="unum">${u.n}</span><span class="uname">${esc(u.name)}</span>
-        ${ready?`<span class="badge-ready">${u.lessons.length}개 공개</span>`:''}
-      </div>${inner}</div>`;
+/* ----- LANDING ----- */
+function renderGrades(){
+  gradeBtns.innerHTML=Object.keys(CURRICULUM).map(g=>
+    `<button class="gradebtn ${GRADE_CLS[g]} ${g===selGrade?'sel':''}" data-g="${g}">${g}</button>`).join('');
+}
+function renderPubs(){
+  if(!selGrade){pubPick.hidden=true;return;}
+  pubPick.hidden=false;
+  pubGradeLbl.textContent=`${selGrade} 교과서를 골라줘`;
+  pubBtns.innerHTML=Object.keys(CURRICULUM[selGrade]).map(p=>{
+    const cnt=CURRICULUM[selGrade][p].reduce((s,u)=>s+u.lessons.length,0);
+    return `<button class="pubbtn" data-p="${esc(p)}">${esc(p)}<span class="badge">${cnt>0?cnt+'개 레슨 공개':'준비 중'}</span></button>`;
   }).join('');
+}
+function showLanding(prefillGrade){
+  menuEl.hidden=true; landingEl.hidden=false;
+  selGrade=prefillGrade&&CURRICULUM[prefillGrade]?prefillGrade:null;
+  renderGrades(); renderPubs();
+  window.scrollTo(0,0);
+}
+gradeBtns.addEventListener('click',e=>{const b=e.target.closest('.gradebtn');if(!b)return;
+  selGrade=b.dataset.g; renderGrades(); renderPubs();
+  pubPick.scrollIntoView({behavior:'smooth',block:'center'});});
+pubBtns.addEventListener('click',e=>{const b=e.target.closest('.pubbtn');if(!b)return;choose(selGrade,b.dataset.p);});
 
-  curEl.insertAdjacentHTML('beforeend',
-    `<section class="grade ${g.cls}" id="${id}">
-       <div class="grade-head">
-         <span class="grade-badge">${g.grade}</span>
-         <span class="desc">${esc(g.desc)}</span>
-       </div>
-       <div class="units">${unitsHTML}</div>
-     </section>`);
-});
+function choose(g,p){localStorage.setItem(KEY_G,g);localStorage.setItem(KEY_P,p);showMenu(g,p);}
 
-document.getElementById('stat').innerHTML=`현재 <b>${total}개</b> 레슨 공개 · 계속 추가 중!`;
+/* ----- MENU ----- */
+function renderUnits(g,p){
+  const cls=GRADE_CLS[g]; let total=0;
+  const html=CURRICULUM[g][p].map(u=>{
+    const ls=u.lessons.map(id=>LESSONS[id]).filter(Boolean); total+=ls.length;
+    const inner=ls.length
+      ? `<div class="lessons">`+ls.map(l=>
+          `<a class="lesson" href="${l.href}"><span class="emoji">${l.emoji}</span><span class="meta"><span class="t">${esc(l.title)}</span><span class="d">${esc(l.desc)}</span></span><span class="go">▶ 시작</span></a>`).join('')+`</div>`
+      : `<div class="soon">🔒 준비 중이에요</div>`;
+    return `<div class="unit ${cls}"><div class="unit-top"><span class="unum">${u.n}</span><span class="uname">${esc(u.name)}</span>${ls.length?`<span class="badge-ready">${ls.length}개 공개</span>`:''}</div>${inner}</div>`;
+  }).join('');
+  document.getElementById('units').innerHTML=html;
+  document.getElementById('stat').innerHTML=`${g} · ${esc(p)} · 현재 <b>${total}개</b> 레슨 공개`;
+  document.getElementById('menuTitle').textContent=`${g} · ${p}`;
+}
+function showMenu(g,p){
+  landingEl.hidden=true; menuEl.hidden=false;
+  document.getElementById('gradeChip').textContent=g+' ▾';
+  document.getElementById('pubChip').textContent=p+' ▾';
+  const chipG=document.getElementById('gradeChip');
+  chipG.className='chip '+GRADE_CLS[g];
+  renderUnits(g,p);
+  window.scrollTo(0,0);
+}
+document.getElementById('gradeChip').addEventListener('click',()=>showLanding(localStorage.getItem(KEY_G)));
+document.getElementById('pubChip').addEventListener('click',()=>showLanding(localStorage.getItem(KEY_G)));
+document.getElementById('homeBtn').addEventListener('click',e=>{e.preventDefault();showLanding(localStorage.getItem(KEY_G));});
+
+/* ----- INIT ----- */
+(function(){
+  const g=localStorage.getItem(KEY_G), p=localStorage.getItem(KEY_P);
+  if(g&&p&&CURRICULUM[g]&&CURRICULUM[g][p]) showMenu(g,p);
+  else showLanding(g);
+})();
 </script>
 </body>
 </html>
