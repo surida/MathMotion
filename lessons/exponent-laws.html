@@ -16,6 +16,7 @@
     --display:'Jua',sans-serif;--hand:'Gaegu',cursive;--body:'Gowun Dodum',sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
   html{scroll-behavior:smooth}
   body{font-family:var(--body);color:var(--ink);background:var(--paper);
     background-image:radial-gradient(var(--paper-2) 1.3px,transparent 1.4px);background-size:14px 14px;line-height:1.75;overflow-x:hidden}
@@ -69,6 +70,7 @@
   .tile.g0{background:#D7F0CE}.tile.g1{background:#CFE6FF}.tile.g2{background:#FFE6B0}.tile.g3{background:#FFD2CC}.tile.g4{background:#E2D6F5}
   @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
   .plus{font-family:var(--display);font-size:24px;color:var(--ink-soft);margin:0 2px}
+  .times{font-family:var(--display);font-size:16px;color:var(--ink-soft);align-self:center;margin:0 1px}
 
   /* lab */
   .board{background:#fff;border:4px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 16px 22px;margin-top:14px}
@@ -88,6 +90,15 @@
   .stepper .lbl{font-family:var(--display);font-size:16px;padding:0 12px;display:flex;flex-direction:column;align-items:center;line-height:1.05}
   .stepper .lbl small{font-family:var(--body);font-size:11px;color:var(--ink-soft);font-weight:400}
   .stepper.M .lbl{color:var(--blue)}.stepper.N .lbl{color:var(--red)}
+  .stepper.C .lbl,.stepper.D .lbl{color:var(--gator-d)}
+  .termx{font-family:var(--display);font-size:24px;color:var(--ink-soft);align-self:center}
+  .coefbadge{font-family:var(--display);font-size:20px;background:#E2F3DC;border:2.5px solid var(--gator-d);border-radius:10px;padding:6px 12px;color:var(--gator-d);box-shadow:2px 2px 0 var(--gator-d)}
+  .eqbig .s2{color:var(--gator-d)}
+  .twotrack{display:grid;gap:12px;width:100%;max-width:420px}
+  .trk{font-family:var(--display);font-size:22px;border:3px solid var(--ink);border-radius:12px;padding:12px 16px;text-align:center}
+  .trk sup{font-size:.6em;vertical-align:super}
+  .trk .tag{font-family:var(--body);font-size:13px;color:var(--ink-soft);margin-left:6px}
+  .trk.num{background:#EAF7E6}.trk.exp{background:#FFEFEC}.trk.res{background:var(--sun);box-shadow:3px 3px 0 var(--ink)}
   .stepper .val{font-family:var(--display);font-size:24px;min-width:42px;text-align:center}
   .stepper button{font-family:var(--display);font-size:26px;width:48px;height:54px;border:none;background:var(--paper-2);cursor:pointer;transition:background .12s}
   .stepper button:hover{background:var(--sun)}.stepper button:active{background:var(--gator)}
@@ -129,22 +140,23 @@
     <div class="strip two">
       <div class="cut panel reveal" style="--rot:-1deg">
         <div class="scene"><span class="cutnum">1</span>
-          <div class="expr">a<sup>3</sup> = a·a·a</div>
+          <div class="expr">a<sup>3</sup> = a×a×a</div>
           <div id="p_a3"></div>
         </div>
-        <div class="bubble"><b>a³</b>은 a를 3번 곱한 것 = 블록 <b>3개</b> 🧱</div>
-        <div class="cap">지수 3 = a를 곱한 횟수 = 블록의 개수.</div>
+        <div class="bubble"><b>a³</b>은 a를 <b>3번 곱한 것</b> = 블록 3개 🧱</div>
+        <div class="cap">지수 3 = a를 <b>곱한 횟수</b>. 블록 하나하나가 ×a 예요.</div>
       </div>
       <div class="cut panel reveal" style="--rot:1deg">
         <div class="scene"><span class="cutnum">2</span>
           <div id="p_mul"></div>
+          <div class="expr" style="font-size:17px">(a×a×a) × (a×a) = a×a×a×a×a</div>
           <div class="expr">a<sup>3</sup> × a<sup>2</sup> = a<sup class="s">5</sup></div>
         </div>
-        <div class="bubble r">a³(3개) 옆에 a²(2개)를 <b>이어붙이면</b> 5개! 지수 <b>3+2=5</b></div>
-        <div class="cap">곱한다 = 블록을 이어붙인다 → 개수(지수)를 <b>더하면</b> 끝.</div>
+        <div class="bubble r">전부 <b>곱셈</b>이니까, 3번 곱한 것 × 2번 곱한 것 = <b>5번 곱한 것</b>!</div>
+        <div class="cap">연산은 그대로 곱셈, <b>곱한 횟수</b>만 3+2=5로 합쳐져요.</div>
       </div>
     </div>
-    <div class="panel reveal"><div class="law s"><span class="ic">➕</span><div><b>aᵐ × aⁿ = a^(m+n)</b> — 같은 밑끼리 곱하면 지수를 <b>더한다</b>.</div></div></div>
+    <div class="panel reveal"><div class="law s"><span class="ic">➕</span><div><b>aᵐ × aⁿ = a^(m+n)</b> — 왜? a는 전부 곱셈이라, a를 <b>m번</b> 곱한 것에 <b>n번</b> 더 곱하면 <b>(m+n)번</b> 곱한 셈! 그래서 지수를 더한다.</div></div></div>
   </section>
 
   <!-- ACT 2: 거듭제곱 = 지수 곱 -->
@@ -171,13 +183,31 @@
     <div class="panel reveal"><div class="law p"><span class="ic">✖️</span><div><b>(aᵐ)ⁿ = a^(m×n)</b> — 거듭제곱의 거듭제곱은 지수를 <b>곱한다</b>.</div></div></div>
   </section>
 
+  <!-- BONUS: 계수가 있으면 -->
+  <section>
+    <div class="act-head"><div class="num">보너스</div><h2>숫자가 붙으면? <small>3a² × 4a³ 같은 경우</small></h2></div>
+    <div class="panel reveal">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div class="expr" style="font-size:30px">3a<sup>2</sup> × 4a<sup>3</sup></div>
+        <div class="twotrack">
+          <div class="trk num">계수(숫자): 3 × 4 = <span style="color:var(--gator-d)">12</span><span class="tag">✖️ 곱한다</span></div>
+          <div class="trk exp">문자(지수): a<sup>2</sup> × a<sup>3</sup> = a<sup>2+3</sup> = a<sup>5</sup><span class="tag">➕ 더한다</span></div>
+          <div class="trk res">합치면 = 12a<sup>5</sup></div>
+        </div>
+        <div class="bubble">숫자는 <b>곱하고</b>, 지수는 <b>더해</b> — 둘은 <b>따로</b> 처리하는 거야!</div>
+      </div>
+    </div>
+    <div class="panel reveal" style="margin-top:14px"><div class="law s"><span class="ic">🧮</span><div><b>(계수끼리 곱) × (문자는 지수 더하기)</b>. 3a²×4a³ = (3×4)·a^(2+3) = <b>12a⁵</b>. 곱셈인데 계수만 곱하고 지수는 더한다는 걸 헷갈리지 말기!</div></div></div>
+  </section>
+
   <!-- ACT 3 LAB -->
   <section>
-    <div class="act-head"><div class="num">3막</div><h2>a 블록 공장 <small>모드를 바꿔 합과 곱을 직접 비교해봐!</small></h2></div>
+    <div class="act-head"><div class="num">3막</div><h2>a 블록 공장 <small>모드를 바꿔 합·곱·계수를 직접 비교해봐!</small></h2></div>
     <div class="board reveal">
       <div class="modebar">
         <button class="modebtn active" data-mode="mul">× 곱셈 (합)</button>
         <button class="modebtn" data-mode="pow">( )ⁿ 거듭제곱 (곱)</button>
+        <button class="modebtn" data-mode="coef">계수 곱셈 3a²×4a³</button>
       </div>
       <div class="eqbig" id="eqBig"></div>
       <div class="eqsub" id="eqSub"></div>
@@ -185,12 +215,23 @@
       <div class="countline" id="countLine"></div>
       <div class="controls">
         <div class="ctrlrow">
-          <div class="stepper M">
+          <div class="stepper C" id="cStep" hidden>
+            <button id="cMinus" aria-label="c 줄이기">−</button>
+            <div class="lbl">c<small>계수</small></div><div class="val" id="cVal">3</div>
+            <button id="cPlus" aria-label="c 늘리기">+</button>
+          </div>
+          <div class="stepper M" id="mStep">
             <button id="mMinus" aria-label="m 줄이기">−</button>
             <div class="lbl" id="mLbl">m<small>지수</small></div><div class="val" id="mVal">3</div>
             <button id="mPlus" aria-label="m 늘리기">+</button>
           </div>
-          <div class="stepper N">
+          <span class="termx" id="termx" hidden>×</span>
+          <div class="stepper D" id="dStep" hidden>
+            <button id="dMinus" aria-label="d 줄이기">−</button>
+            <div class="lbl">d<small>계수</small></div><div class="val" id="dVal">4</div>
+            <button id="dPlus" aria-label="d 늘리기">+</button>
+          </div>
+          <div class="stepper N" id="nStep">
             <button id="nMinus" aria-label="n 줄이기">−</button>
             <div class="lbl" id="nLbl">n<small>지수</small></div><div class="val" id="nVal">2</div>
             <button id="nPlus" aria-label="n 늘리기">+</button>
@@ -209,15 +250,27 @@
       <div class="law p"><span class="ic">✖️</span><div>거듭제곱의 <b>거듭제곱</b> → 지수 <b>곱하기</b> ((aᵐ)ⁿ=a^(mn))</div></div>
     </div>
     <div class="panel reveal">
-      <h3>퀴즈 한 문제</h3>
+      <h3>퀴즈 1 — 합인가 곱인가?</h3>
       <p><b>(a²)³</b> 을 바르게 간단히 하면? (a²짜리 묶음이 3줄이에요!)</p>
       <div class="qline">(a<sup>2</sup>)<sup>3</sup> = ?</div>
-      <div class="qopts" id="qopts">
+      <div class="qopts" data-right="정답! 🎉 a²짜리 묶음이 3줄 → 블록 2×3=6개 → a⁶. 거듭제곱은 지수를 곱해요!" data-wrong="앗! (a²)³은 a² 묶음을 3번 쌓은 것 = 2×3=6개 → a⁶ 이에요 🧱">
         <button class="qopt" data-correct="true">a<sup>6</sup> — 2×3=6, 블록 6개 ✔</button>
         <button class="qopt" data-correct="false">a<sup>5</sup> — 지수를 더했어요 (그건 a²×a³)</button>
         <button class="qopt" data-correct="false">a<sup>8</sup> — 2³=8과 헷갈렸어요</button>
       </div>
-      <div class="qfeedback" id="qfeedback"></div>
+      <div class="qfeedback"></div>
+    </div>
+
+    <div class="panel reveal" style="margin-top:16px">
+      <h3>퀴즈 2 — 계수와 지수, 따로!</h3>
+      <p><b>3a² × 4a³</b> 을 계산하면? (숫자는 숫자끼리, 지수는 지수끼리!)</p>
+      <div class="qline">3a<sup>2</sup> × 4a<sup>3</sup> = ?</div>
+      <div class="qopts" data-right="정답! 🎉 계수는 3×4=12로 곱하고, 지수는 2+3=5로 더해서 12a⁵!" data-wrong="앗! 계수(숫자)는 곱하고(3×4=12), 지수는 더해요(2+3=5) → 12a⁵">
+        <button class="qopt" data-correct="true">12a<sup>5</sup> — 계수 3×4=12, 지수 2+3=5 ✔</button>
+        <button class="qopt" data-correct="false">12a<sup>6</sup> — 지수를 곱했어요 (지수는 더해요)</button>
+        <button class="qopt" data-correct="false">7a<sup>5</sup> — 계수를 더했어요 (계수는 곱해요)</button>
+      </div>
+      <div class="qfeedback"></div>
     </div>
   </section>
 </main>
@@ -241,11 +294,13 @@ function gatorSVG(){
 document.getElementById('heroGator').innerHTML=gatorSVG();
 
 const tile=(cls,i)=>`<div class="tile ${cls}" style="animation-delay:${i*28}ms">a</div>`;
-/* webtoon static tiles */
-function rowTiles(n,cls){let s='';for(let i=0;i<n;i++)s+=tile(cls,i);return `<div class="tilearea">${s}</div>`;}
-document.getElementById('p_a3').innerHTML=rowTiles(3,'b');
-(function(){let s='';for(let i=0;i<3;i++)s+=tile('b',i);s+='<span class="plus">+</span>';for(let i=0;i<2;i++)s+=tile('r',i+3);
-  document.getElementById('p_mul').innerHTML=`<div class="tilearea">${s}</div>`;})();
+const TX='<span class="times">×</span>';
+const joinTimes=arr=>arr.join(TX);
+/* webtoon static tiles — a는 전부 ×(곱셈)로 연결 */
+(function(){const arr=[];for(let i=0;i<3;i++)arr.push(tile('b',i));
+  document.getElementById('p_a3').innerHTML=`<div class="tilearea">${joinTimes(arr)}</div>`;})();
+(function(){const arr=[];for(let i=0;i<3;i++)arr.push(tile('b',i));for(let i=0;i<2;i++)arr.push(tile('r',i+3));
+  document.getElementById('p_mul').innerHTML=`<div class="tilearea">${joinTimes(arr)}</div>`;})();
 (function(){let rows='';for(let r=0;r<3;r++){let t='';for(let c=0;c<2;c++)t+=tile('g'+r,r*2+c);rows+=`<div class="tilerow">${t}</div>`;}
   document.getElementById('p_pow').innerHTML=`<div class="tilearea grid">${rows}</div>`;})();
 
@@ -254,34 +309,50 @@ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.targ
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%2*70)+'ms';io.observe(el)});
 
 /* ---------- LAB ---------- */
-let mode='mul', m=3, n=2;
-const RANGE={mul:{mMax:6,nMax:6},pow:{mMax:5,nMax:5}};
+let mode='mul', m=3, n=2, c=3, d=4;
+const RANGE={mul:{mMax:6,nMax:6},pow:{mMax:5,nMax:5},coef:{mMax:5,nMax:5,cMax:6,dMax:6}};
 const eqBig=document.getElementById('eqBig'),eqSub=document.getElementById('eqSub'),tilesEl=document.getElementById('tiles');
 const countLine=document.getElementById('countLine'),hintEl=document.getElementById('hint');
 const mVal=document.getElementById('mVal'),nVal=document.getElementById('nVal'),mLbl=document.getElementById('mLbl'),nLbl=document.getElementById('nLbl');
+const cVal=document.getElementById('cVal'),dVal=document.getElementById('dVal');
+const cStep=document.getElementById('cStep'),dStep=document.getElementById('dStep'),termx=document.getElementById('termx');
 
 function render(){
   const R=RANGE[mode];
   m=Math.min(m,R.mMax); n=Math.min(n,R.nMax);
-  mVal.textContent=m; nVal.textContent=n;
+  const isCoef=mode==='coef';
+  cStep.hidden=!isCoef; dStep.hidden=!isCoef; termx.hidden=!isCoef;
+  mVal.textContent=m; nVal.textContent=n; cVal.textContent=c; dVal.textContent=d;
   document.getElementById('mMinus').disabled=m<=1; document.getElementById('mPlus').disabled=m>=R.mMax;
   document.getElementById('nMinus').disabled=n<=1; document.getElementById('nPlus').disabled=n>=R.nMax;
+  if(isCoef){
+    document.getElementById('cMinus').disabled=c<=1; document.getElementById('cPlus').disabled=c>=R.cMax;
+    document.getElementById('dMinus').disabled=d<=1; document.getElementById('dPlus').disabled=d>=R.dMax;
+  }
   if(mode==='mul'){
     mLbl.innerHTML='m<small>aᵐ의 지수</small>'; nLbl.innerHTML='n<small>aⁿ의 지수</small>';
     eqBig.innerHTML=`a<sup>${m}</sup> × a<sup>${n}</sup> = a<sup class="s">${m+n}</sup>`;
-    eqSub.innerHTML=`지수: <b>${m} + ${n} = ${m+n}</b>`;
-    let s='';for(let i=0;i<m;i++)s+=tile('b',i); s+='<span class="plus">+</span>'; for(let i=0;i<n;i++)s+=tile('r',m+i);
-    tilesEl.className='tilearea'; tilesEl.innerHTML=s;
-    countLine.innerHTML=`🟦 ${m}개 <b>+</b> 🟥 ${n}개 = <b>${m+n}개</b> → 지수 ${m+n}`;
-    hintEl.innerHTML=`블록을 <b>한 줄로 이어붙이니</b> 개수가 더해지죠? 그래서 곱셈은 지수를 <b>더해요</b>.`;
-  }else{
+    eqSub.innerHTML=`a를 <b style="color:var(--blue)">${m}번</b> 곱한 것 × <b style="color:var(--red)">${n}번</b> 곱한 것 = <b>${m+n}번</b> 곱함`;
+    {const arr=[];for(let i=0;i<m;i++)arr.push(tile('b',i));for(let i=0;i<n;i++)arr.push(tile('r',m+i));
+     tilesEl.className='tilearea'; tilesEl.innerHTML=joinTimes(arr);}
+    countLine.innerHTML=`전부 <b>×</b>(곱셈)! 🟦${m} <b>+</b> 🟥${n} = a를 <b>${m+n}번</b> 곱한 셈 → 지수 ${m+n}`;
+    hintEl.innerHTML=`a는 전부 곱셈이에요. a를 ${m}번 곱하고 ${n}번 <b>더 곱하면</b> = ${m+n}번 곱한 것! 그래서 지수를 <b>더해요</b>.`;
+  }else if(mode==='pow'){
     mLbl.innerHTML='m<small>안쪽 지수</small>'; nLbl.innerHTML='n<small>바깥 지수</small>';
     eqBig.innerHTML=`(a<sup>${m}</sup>)<sup>${n}</sup> = a<sup class="s">${m*n}</sup>`;
     eqSub.innerHTML=`지수: <b>${m} × ${n} = ${m*n}</b>`;
-    let rows='';for(let r=0;r<n;r++){let t='';for(let c=0;c<m;c++)t+=tile('g'+(r%5),r*m+c);rows+=`<div class="tilerow">${t}</div>`;}
+    let rows='';for(let r=0;r<n;r++){let t='';for(let col=0;col<m;col++)t+=tile('g'+(r%5),r*m+col);rows+=`<div class="tilerow">${t}</div>`;}
     tilesEl.className='tilearea grid'; tilesEl.innerHTML=rows;
     countLine.innerHTML=`${m}개짜리 묶음 <b>×</b> ${n}줄 = <b>${m*n}개</b> → 지수 ${m*n}`;
     hintEl.innerHTML=`a<sup>${m}</sup> 묶음을 <b>${n}줄</b> 쌓으니 개수가 곱해지죠? 그래서 거듭제곱은 지수를 <b>곱해요</b>.`;
+  }else{ /* coef */
+    mLbl.innerHTML='m<small>aᵐ의 지수</small>'; nLbl.innerHTML='n<small>aⁿ의 지수</small>';
+    eqBig.innerHTML=`<span class="s2">${c}</span>a<sup>${m}</sup> × <span class="s2">${d}</span>a<sup>${n}</sup> = <span class="s2">${c*d}</span>a<sup class="s">${m+n}</sup>`;
+    eqSub.innerHTML=`계수: <b style="color:var(--gator-d)">${c}×${d}=${c*d}</b> (곱) &nbsp;·&nbsp; 지수: <b style="color:var(--red)">${m}+${n}=${m+n}</b> (합)`;
+    {const arr=[];for(let i=0;i<m;i++)arr.push(tile('b',i));for(let i=0;i<n;i++)arr.push(tile('r',m+i));
+     tilesEl.className='tilearea'; tilesEl.innerHTML=`<span class="coefbadge">${c}×${d} = ${c*d}배</span>`+TX+joinTimes(arr);}
+    countLine.innerHTML=`계수 ${c}×${d}=<b>${c*d}</b> (곱) · 지수 ${m}+${n}=<b>${m+n}</b> (합) → <b>${c*d}a<sup>${m+n}</sup></b>`;
+    hintEl.innerHTML=`<b>숫자(계수)는 곱하고</b>, <b>지수는 더해요</b> — 둘을 헷갈리지 말고 따로!`;
   }
 }
 document.querySelectorAll('.modebtn').forEach(b=>b.addEventListener('click',()=>{
@@ -292,12 +363,17 @@ document.getElementById('mMinus').addEventListener('click',()=>{if(m>1){m--;rend
 document.getElementById('mPlus').addEventListener('click',()=>{if(m<RANGE[mode].mMax){m++;render();}});
 document.getElementById('nMinus').addEventListener('click',()=>{if(n>1){n--;render();}});
 document.getElementById('nPlus').addEventListener('click',()=>{if(n<RANGE[mode].nMax){n++;render();}});
+document.getElementById('cMinus').addEventListener('click',()=>{if(c>1){c--;render();}});
+document.getElementById('cPlus').addEventListener('click',()=>{if(c<RANGE.coef.cMax){c++;render();}});
+document.getElementById('dMinus').addEventListener('click',()=>{if(d>1){d--;render();}});
+document.getElementById('dPlus').addEventListener('click',()=>{if(d<RANGE.coef.dMax){d++;render();}});
 
-document.getElementById('qopts').addEventListener('click',e=>{const btn=e.target.closest('.qopt');if(!btn)return;
-  const fb=document.getElementById('qfeedback');
-  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML='정답! 🎉 a²짜리 묶음이 3줄 → 블록 2×3=6개 → a⁶. 거듭제곱은 지수를 곱해요!';}
-  else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML='앗! (a²)³은 a² 묶음을 3번 쌓은 것 = 2×3=6개 → a⁶ 이에요 🧱';}
-});
+document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
+  const btn=e.target.closest('.qopt'); if(!btn)return;
+  const fb=box.parentElement.querySelector('.qfeedback');
+  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;}
+  else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML=box.dataset.wrong;}
+}));
 
 render();
 </script>
