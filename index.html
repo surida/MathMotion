@@ -153,14 +153,16 @@ const LESSONS = {
   'linear-stairs':    {emoji:'🪜', title:'y = ax + b 의 비밀', desc:'부등이의 계단 오르기 — a(기울기)와 b(절편)', href:'lessons/linear-stairs.html'},
   'linear-equation':  {emoji:'🎯', title:'방정식 ax + b = 0 의 해', desc:'부등이, 땅에 닿다 — 해 = 그래프가 x축과 만나는 점', href:'lessons/linear-equation.html'},
   'exponent-laws':    {emoji:'🧱', title:'지수는 곱한 횟수다', desc:'부등이의 a 블록 공장 — 곱셈은 더하고, 거듭제곱은 곱한다', href:'lessons/exponent-laws.html'},
+  'exponent-division':{emoji:'✂️', title:'지수의 나눗셈 — 약분의 비밀', desc:'부등이의 a 약분소 — 짝 지우면 지수가 빠진다', href:'lessons/exponent-division.html'},
+  'simultaneous-eq':  {emoji:'🧾', title:'연립방정식 — 빼서 푸는 비밀', desc:'부등이의 영수증 탐정 — 가감법으로 미지수 소거', href:'lessons/simultaneous-equations.html'},
 };
 
 /* ---------- 교육과정: 학년 → 교과서 → 단원(순서) → 레슨 id ---------- */
 const CURRICULUM = {
   '중2': {
     '교학사': [
-      {n:1, name:'수와 식',          lessons:['repeating-decimal','exponent-laws']},
-      {n:2, name:'부등식과 방정식',   lessons:['ineq-mirror']},
+      {n:1, name:'수와 식',          lessons:['repeating-decimal','exponent-laws','exponent-division']},
+      {n:2, name:'부등식과 방정식',   lessons:['ineq-mirror','simultaneous-eq']},
       {n:3, name:'일차함수',          lessons:['linear-stairs','linear-equation']},
       {n:4, name:'도형의 성질',       lessons:[]},
       {n:5, name:'도형의 닮음',       lessons:[]},
@@ -168,8 +170,8 @@ const CURRICULUM = {
     ],
     '천재교육': [
       {n:1, name:'유리수와 순환소수',          lessons:['repeating-decimal']},
-      {n:2, name:'식의 계산',                 lessons:['exponent-laws']},
-      {n:3, name:'일차부등식과 연립일차방정식', lessons:['ineq-mirror']},
+      {n:2, name:'식의 계산',                 lessons:['exponent-laws','exponent-division']},
+      {n:3, name:'일차부등식과 연립일차방정식', lessons:['ineq-mirror','simultaneous-eq']},
       {n:4, name:'일차함수와 그래프',          lessons:['linear-stairs','linear-equation']},
       {n:5, name:'삼각형과 사각형의 성질',      lessons:[]},
       {n:6, name:'도형의 닮음과 피타고라스 정리', lessons:[]},
