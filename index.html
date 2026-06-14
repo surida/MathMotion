@@ -155,6 +155,9 @@ const LESSONS = {
   'exponent-laws':    {emoji:'🧱', title:'지수는 곱한 횟수다', desc:'부등이의 a 블록 공장 — 곱셈은 더하고, 거듭제곱은 곱한다', href:'lessons/exponent-laws.html'},
   'exponent-division':{emoji:'✂️', title:'지수의 나눗셈 — 약분의 비밀', desc:'부등이의 a 약분소 — 짝 지우면 지수가 빠진다', href:'lessons/exponent-division.html'},
   'simultaneous-eq':  {emoji:'🧾', title:'연립방정식 — 빼서 푸는 비밀', desc:'부등이의 영수증 탐정 — 가감법으로 미지수 소거', href:'lessons/simultaneous-equations.html'},
+  'square-root':      {emoji:'🟦', title:'제곱근 — 넓이에서 한 변 찾기', desc:'부등이의 정사각형 — √a는 넓이 a 정사각형의 한 변(제곱의 반대)', href:'lessons/square-root.html'},
+  'sqrt-mul-div':     {emoji:'√', title:'제곱근의 곱셈과 나눗셈', desc:'부등이의 근호 합치기 — 근호 안 수끼리 곱하고 나눈다(√a√b=√ab)', href:'lessons/sqrt-mul-div.html'},
+  'sqrt-add-sub':     {emoji:'➕', title:'제곱근의 덧셈과 뺄셈', desc:'부등이의 근호 모으기 — 같은 근호끼리 계수를 더한다(√a+√b≠√(a+b))', href:'lessons/sqrt-add-sub.html'},
 };
 
 /* ---------- 교육과정: 학년 → 교과서 → 단원(순서) → 레슨 id ---------- */
@@ -180,7 +183,7 @@ const CURRICULUM = {
   },
   '중3': {
     '동아출판사': [
-      {n:1, name:'실수와 그 계산',            lessons:[]},
+      {n:1, name:'실수와 그 계산',            lessons:['square-root','sqrt-mul-div','sqrt-add-sub']},
       {n:2, name:'다항식의 곱셈과 인수분해',   lessons:[]},
       {n:3, name:'이차방정식',               lessons:[]},
       {n:4, name:'이차함수와 그래프',         lessons:[]},
@@ -189,8 +192,8 @@ const CURRICULUM = {
       {n:7, name:'통계',                     lessons:[]},
     ],
     '천재교육': [
-      {n:1, name:'제곱근과 실수',            lessons:[]},
-      {n:2, name:'근호를 포함한 식의 계산',   lessons:[]},
+      {n:1, name:'제곱근과 실수',            lessons:['square-root']},
+      {n:2, name:'근호를 포함한 식의 계산',   lessons:['sqrt-mul-div','sqrt-add-sub']},
       {n:3, name:'다항식의 곱셈과 인수분해',  lessons:[]},
       {n:4, name:'이차방정식',               lessons:[]},
       {n:5, name:'이차함수와 그래프',         lessons:[]},
