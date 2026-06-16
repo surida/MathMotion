@@ -160,6 +160,8 @@ const LESSONS = {
   'sqrt-add-sub':     {emoji:'➕', title:'제곱근의 덧셈과 뺄셈', desc:'부등이의 근호 모으기 — 같은 근호끼리 계수를 더한다(√a+√b≠√(a+b))', href:'lessons/sqrt-add-sub.html'},
   'factoring':        {emoji:'🧩', title:'인수분해 — 직사각형 맞추기', desc:'부등이의 직사각형 — 대수막대로 x²+(a+b)x+ab=(x+a)(x+b)', href:'lessons/factoring.html'},
   'factoring-neg':    {emoji:'🕵️', title:'인수분해 — 음수와 부호', desc:'부등이의 부호 탐정 — 곱·합으로 음수 두 수 찾기(부호 규칙)', href:'lessons/factoring-negative.html'},
+  'quadratic-eq':     {emoji:'🔑', title:'이차방정식 — 0의 비밀(AB=0)', desc:'부등이의 0의 비밀 — 곱이 0이면 하나가 0 → 인수분해로 두 근', href:'lessons/quadratic-eq.html'},
+  'quadratic-formula':{emoji:'🗝️', title:'근의 공식 — 인수분해 안 될 때', desc:'부등이의 만능 열쇠 — 판별식·포물선으로 근의 공식', href:'lessons/quadratic-formula.html'},
 };
 
 /* ---------- 교육과정: 학년 → 교과서 → 단원(순서) → 레슨 id ---------- */
@@ -187,7 +189,7 @@ const CURRICULUM = {
     '동아출판사': [
       {n:1, name:'실수와 그 계산',            lessons:['square-root','sqrt-mul-div','sqrt-add-sub']},
       {n:2, name:'다항식의 곱셈과 인수분해',   lessons:['factoring','factoring-neg']},
-      {n:3, name:'이차방정식',               lessons:[]},
+      {n:3, name:'이차방정식',               lessons:['quadratic-eq','quadratic-formula']},
       {n:4, name:'이차함수와 그래프',         lessons:[]},
       {n:5, name:'삼각비',                   lessons:[]},
       {n:6, name:'원의 성질',                lessons:[]},
@@ -197,7 +199,7 @@ const CURRICULUM = {
       {n:1, name:'제곱근과 실수',            lessons:['square-root']},
       {n:2, name:'근호를 포함한 식의 계산',   lessons:['sqrt-mul-div','sqrt-add-sub']},
       {n:3, name:'다항식의 곱셈과 인수분해',  lessons:['factoring','factoring-neg']},
-      {n:4, name:'이차방정식',               lessons:[]},
+      {n:4, name:'이차방정식',               lessons:['quadratic-eq','quadratic-formula']},
       {n:5, name:'이차함수와 그래프',         lessons:[]},
       {n:6, name:'삼각비',                   lessons:[]},
       {n:7, name:'원의 성질',                lessons:[]},
