@@ -115,6 +115,11 @@
   .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
   .lawcard{display:grid;gap:14px;margin:10px 0}
   footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
+  .zsim{text-align:center;margin:8px 0}
+  .zgrid{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;margin:8px 0;min-height:34px;font-size:22px;line-height:1.15}
+  .zcount{font-family:var(--display);font-size:clamp(20px,5vw,28px)}.zcount b{color:var(--red)}.zcount sup{font-size:.55em;vertical-align:super}
+  .znote{font-family:var(--hand);font-size:19px;font-weight:700;color:var(--ink-soft);min-height:26px;margin-top:4px}
+  .zctrl{display:flex;justify-content:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -240,6 +245,22 @@
         <div class="hint" id="hint">곱셈 모드: aᵐ과 aⁿ 블록을 <b>한 줄로 이어붙여</b> 개수를 세요. 지수는 더해져요!</div>
       </div>
     </div>
+  </section>
+
+  <!-- 생활 속 지수: 좀비 확산 -->
+  <section>
+    <div class="act-head"><div class="num">생활 속 지수</div><h2>🧟 좀비는 며칠 만에 도시를 삼킬까? <small>지수의 곱이 진짜 쓰이는 곳</small></h2></div>
+    <div class="board reveal">
+      <p style="text-align:center">좀비 1명이 <b>매일 2명</b>을 감염시켜요. 며칠 뒤 감염자는?</p>
+      <div class="zsim">
+        <div class="zgrid" id="zGrid"></div>
+        <div class="zcount" id="zCount"></div>
+        <div class="znote" id="zNote"></div>
+      </div>
+      <div class="zctrl"><div class="stepper"><button id="dayM" aria-label="날짜 줄이기">−</button><div class="lbl" style="color:var(--red)">날짜</div><div class="val" id="dayVal">4</div><button id="dayP" aria-label="날짜 늘리기">+</button></div></div>
+      <div class="hint">날짜를 늘려보세요 — 처음엔 별것 아닌데 곧 <b>폭발</b>해요! 😱</div>
+    </div>
+    <div class="panel reveal" style="margin-top:14px"><div class="law s"><span class="ic">🧟</span><div><b>왜 지수의 곱을 배울까?</b> 2일차에 2²=4명 → 거기서 3일 더 퍼지면 ×2³ → <b>2²×2³=2⁵=32명</b>. 날짜를 더하면 지수도 더해져요(우리가 배운 그 법칙!). 그래서 <b>며칠 뒤든 한 번에</b> 좀비 수를 계산할 수 있죠.</div></div></div>
   </section>
 
   <!-- 마무리 -->
@@ -376,6 +397,30 @@ document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=
 }));
 
 render();
+
+/* 생활 속 지수 — 좀비 확산 시뮬 */
+let day=4;
+const zGrid=document.getElementById('zGrid'),zCount=document.getElementById('zCount'),zNote=document.getElementById('zNote'),dayVal=document.getElementById('dayVal');
+function fmtBig(n){ if(n>=1e8) return (Math.round(n/1e7)/10)+'억'; if(n>=1e4) return (Math.round(n/1e3)/10)+'만'; return n.toLocaleString('en-US'); }
+function renderZ(){
+  const inf=Math.pow(2,day);
+  dayVal.textContent=day;
+  document.getElementById('dayM').disabled=day<=0; document.getElementById('dayP').disabled=day>=20;
+  const show=Math.min(inf,40); let g=''; for(let i=0;i<show;i++) g+='🧟';
+  if(inf>40) g+=` <span style="font-family:var(--hand);font-size:16px;color:var(--ink-soft)">…+${fmtBig(inf-40)}명</span>`;
+  zGrid.innerHTML=g;
+  zCount.innerHTML=`${day}일 후 → <b>${fmtBig(inf)}명</b> 감염 &nbsp;(2<sup>${day}</sup>)`;
+  let note;
+  if(inf>=1e6) note='🏙️ 도시 하나(약 100만)가 통째로 좀비!';
+  else if(inf>=1e4) note='😱 벌써 1만 명 돌파!';
+  else if(inf>=1e3) note='마을 하나 규모가 됐어요!';
+  else if(inf>=100) note='학교 하나가 넘어갔어요…';
+  else note='아직은 잠잠… 하지만 곧?';
+  zNote.textContent=note;
+}
+document.getElementById('dayM').onclick=()=>{if(day>0){day--;renderZ();}};
+document.getElementById('dayP').onclick=()=>{if(day<20){day++;renderZ();}};
+renderZ();
 </script>
 </body>
 </html>

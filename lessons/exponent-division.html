@@ -103,6 +103,11 @@
   .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
   .lawcard{display:grid;gap:14px;margin:10px 0}
   footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
+  .wcsim{text-align:center;margin:8px 0}
+  .wcrow{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:8px 0;min-height:36px;font-size:24px;line-height:1.15}
+  .wccount{font-family:var(--display);font-size:clamp(20px,5vw,28px)}.wccount b{color:var(--blue)}.wccount sup{font-size:.55em;vertical-align:super}
+  .wcnote{font-family:var(--hand);font-size:19px;font-weight:700;color:var(--ink-soft);min-height:26px;margin-top:4px}
+  .wcctrl{display:flex;justify-content:center;margin-top:10px}
 </style>
 </head>
 <body>
@@ -200,6 +205,22 @@
         <div class="hint" id="hint">위 aᵐ, 아래 aⁿ. 같은 a끼리 <b>짝을 지우면(약분)</b> 남는 쪽이 답이에요!</div>
       </div>
     </div>
+  </section>
+
+  <!-- 생활 속 지수: 월드컵 토너먼트 -->
+  <section>
+    <div class="act-head"><div class="num">생활 속 지수</div><h2>⚽ 월드컵, 몇 경기면 우승자가 나올까? <small>지수의 나눗셈이 쓰이는 곳</small></h2></div>
+    <div class="board reveal">
+      <p style="text-align:center">16강은 <b>2⁴=16팀</b>! 한 라운드마다 <b>절반(÷2)</b>이 탈락해요.</p>
+      <div class="wcsim">
+        <div class="wcrow" id="wcRow"></div>
+        <div class="wccount" id="wcCount"></div>
+        <div class="wcnote" id="wcNote"></div>
+      </div>
+      <div class="wcctrl"><div class="stepper"><button id="rM" aria-label="라운드 줄이기">−</button><div class="lbl" style="color:var(--blue)">라운드</div><div class="val" id="rVal">0</div><button id="rP" aria-label="라운드 늘리기">+</button></div></div>
+      <div class="hint">라운드를 넘겨보세요 — 매번 ÷2, 우승까지 딱 <b>4경기(라운드)</b>!</div>
+    </div>
+    <div class="panel reveal" style="margin-top:14px"><div class="law d"><span class="ic">⚽</span><div><b>왜 지수의 나눗셈을 배울까?</b> 16강(2⁴)에서 2라운드 지나면 남은 팀 = <b>2⁴÷2²=2²=4팀</b>(4강)! 라운드 수만큼 지수가 <b>빠져요</b>. 그래서 64강(2⁶)이든 <b>몇 경기면 우승</b>인지 한 번에 알죠.</div></div></div>
   </section>
 
   <!-- 마무리 -->
@@ -335,6 +356,23 @@ document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=
 }));
 
 render();
+
+/* 생활 속 지수 — 월드컵 토너먼트 */
+const ROUNDS=['16강','8강','4강(준결승)','결승','우승'];
+let rnd=0;
+const wcRow=document.getElementById('wcRow'),wcCount=document.getElementById('wcCount'),wcNote=document.getElementById('wcNote'),rVal=document.getElementById('rVal');
+function renderWC(){
+  const teams=Math.pow(2,4-rnd);
+  rVal.textContent=rnd;
+  document.getElementById('rM').disabled=rnd<=0; document.getElementById('rP').disabled=rnd>=4;
+  wcRow.innerHTML='⚽'.repeat(teams);
+  wcCount.innerHTML=`${ROUNDS[rnd]} → <b>${teams}팀</b> 남음 &nbsp;(2<sup>4</sup> ÷ 2<sup>${rnd}</sup> = 2<sup>${4-rnd}</sup>)`;
+  const notes=['이제 시작! 16팀','8강 — 절반 탈락','4강 — 또 절반','결승! 단 2팀','🏆 우승 1팀 (2⁰=1)!'];
+  wcNote.textContent=notes[rnd];
+}
+document.getElementById('rM').onclick=()=>{if(rnd>0){rnd--;renderWC();}};
+document.getElementById('rP').onclick=()=>{if(rnd<4){rnd++;renderWC();}};
+renderWC();
 </script>
 </body>
 </html>
