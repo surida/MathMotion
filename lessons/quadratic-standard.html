@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>부등이의 포물선 변신술 — y=ax²+bx+c</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF3E2;--paper-2:#F4E7CC;--ink:#2B2520;--ink-soft:#5A5046;
+    --gator:#7CC36A;--gator-d:#4E9E48;--gator-belly:#E9F5C9;
+    --blue:#2E7BC4;--blue-soft:#CFE6FF;--red:#E8584E;--red-soft:#FFD2CC;--mint:#39C2C9;--sun:#FFC847;--orange:#E8884E;--grid:#D9C7A2;
+    --shadow:6px 6px 0 var(--ink);
+    --display:'Jua',sans-serif;--hand:'Gaegu',cursive;--body:'Gowun Dodum',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  [hidden]{display:none!important}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);
+    background-image:radial-gradient(var(--paper-2) 1.3px,transparent 1.4px);background-size:14px 14px;line-height:1.75;overflow-x:hidden}
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px}
+  a{color:inherit}
+  .backlink{display:inline-block;margin:16px 0 0;font-family:var(--hand);font-size:18px;font-weight:700;color:var(--ink-soft)}
+
+  .panel{background:#fff;border:4px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:22px;position:relative}
+  .bubble{font-family:var(--hand);font-size:23px;font-weight:700;background:#fff;border:3px solid var(--ink);border-radius:16px;padding:10px 16px;position:relative;display:inline-block;line-height:1.3}
+  .bubble::after{content:"";position:absolute;left:30px;bottom:-15px;width:0;height:0;border:8px solid transparent;border-top-color:var(--ink)}
+  .bubble.r::after{left:auto;right:30px}
+  .reveal{opacity:0;transform:translateY(40px) rotate(var(--rot,0deg));transition:opacity .6s ease,transform .6s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:translateY(0) rotate(var(--rot,0deg))}
+  .gator .teeth{fill:#fff}.gator .mouth{fill:#9B3B3B}.gator .eyew{fill:#fff}.gator .pupil{fill:var(--ink)}
+  .gator .body{fill:var(--gator)}.gator .bodyd{fill:var(--gator-d)}.gator .belly{fill:var(--gator-belly)}
+
+  header{text-align:center;padding:30px 18px 36px;position:relative}
+  header .sky{position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,#FFE9B0 0%,transparent 60%);z-index:-1}
+  .eyebrow{font-family:var(--hand);font-size:22px;color:var(--gator-d);font-weight:700;display:inline-block}
+  header h1{font-family:var(--display);font-size:clamp(28px,6vw,48px);line-height:1.08;margin:8px 0 6px;text-shadow:4px 4px 0 var(--sun)}
+  header h1 .pop{color:var(--blue)}
+  header p.sub{font-size:18px;color:var(--ink-soft);max-width:580px;margin:6px auto 22px}
+  header p.sub sup{font-size:.6em;vertical-align:super}
+  .hero-gator{width:min(230px,62vw);margin:0 auto;animation:bob 3s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .scrollcue{margin-top:18px;font-family:var(--hand);font-size:20px;color:var(--ink-soft);animation:bob 2s ease-in-out infinite}
+
+  .act-head{text-align:center;margin:64px 0 24px}
+  .act-head .num{font-family:var(--display);font-size:18px;color:var(--blue)}
+  .act-head h2{font-family:var(--display);font-size:clamp(24px,5vw,38px);margin-top:2px}
+  .act-head h2 small{display:block;font-family:var(--hand);font-size:18px;color:var(--ink-soft);margin-top:6px;font-weight:700}
+
+  .strip{display:grid;gap:20px;margin-bottom:14px}
+  @media(min-width:680px){.strip.two{grid-template-columns:1fr 1fr}}
+  .cut{display:flex;flex-direction:column;gap:14px}
+  .cut .scene{background:linear-gradient(180deg,#FFFDF6,#FBF1DA);border:3px dashed var(--ink);border-radius:14px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:210px;position:relative;overflow:hidden}
+  .cut .cap{font-size:16px;color:var(--ink-soft)}.cut .cap b{color:var(--ink)}
+  .cutnum{position:absolute;top:-2px;left:-2px;font-family:var(--display);background:var(--ink);color:var(--paper);width:36px;height:36px;display:grid;place-items:center;border-radius:0 0 12px 0;z-index:3;font-size:16px}
+  .expr{font-family:var(--display);font-size:22px;line-height:1.5}.expr sup{font-size:.6em;vertical-align:super}
+  .zero{color:var(--red)}.ok{color:var(--gator-d)}
+  .arrow{color:var(--gator-d);font-size:20px}
+
+  .law{display:flex;gap:14px;align-items:center;border:3px solid var(--ink);border-radius:14px;padding:14px 16px;background:#fff}
+  .law .ic{font-size:30px;flex:none}.law.z{background:#FFEFEC}.law b{font-family:var(--display);font-weight:400}
+  .lawcard{display:grid;gap:14px;margin:10px 0}
+
+  /* lab */
+  .board{background:#fff;border:4px solid var(--ink);border-radius:18px;box-shadow:var(--shadow);padding:18px 16px 22px;margin-top:14px}
+  .labgrid{display:grid;gap:16px}
+  @media(min-width:720px){.labgrid{grid-template-columns:1fr 1fr;align-items:start}}
+  .eqtop{text-align:center;font-family:var(--display);font-size:clamp(20px,5vw,26px);color:var(--blue);margin-bottom:6px}
+  .eqtop sup{font-size:.55em;vertical-align:super}
+  .steps{display:grid;gap:8px;min-height:170px}
+  .stepline{font-family:var(--display);font-size:clamp(16px,4.4vw,20px);background:var(--paper);border:2px solid var(--grid);border-radius:10px;padding:8px 12px;opacity:0;transform:translateX(-12px);transition:opacity .35s,transform .35s}
+  .stepline.show{opacity:1;transform:none}
+  .stepline.final{background:#EAF7E6;border-color:var(--gator-d)}
+  .stepline .note{display:block;font-family:var(--hand);font-size:14px;color:var(--ink-soft);margin-top:2px}
+  .stepline sup{font-size:.6em;vertical-align:super}
+  .parawrap{display:flex;justify-content:center}
+  #para{width:100%;max-width:340px;height:auto;display:block}
+  .pl{stroke:var(--blue);stroke-width:4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+  .axis{stroke:var(--ink);stroke-width:2}
+  .symaxis{stroke:var(--mint);stroke-width:2.5;stroke-dasharray:5 4}
+  .grid{stroke:var(--grid);stroke-width:1}
+  .ticklbl{font-family:var(--body);font-size:10px;fill:var(--ink-soft)}
+  .vtx{fill:var(--sun);stroke:var(--ink);stroke-width:2.5}
+  .vtxlbl{font-family:var(--display);font-size:12px;fill:var(--gator-d);text-anchor:middle}
+  .yint{fill:var(--blue);stroke:var(--ink);stroke-width:2}
+  .yintlbl{font-family:var(--display);font-size:11px;fill:var(--blue)}
+  .qmark{font-family:var(--display);font-size:24px;fill:var(--red)}
+  .status{text-align:center;font-family:var(--hand);font-size:19px;font-weight:700;min-height:28px;margin-top:8px}
+  .controls{margin-top:14px;display:grid;gap:12px}
+  .btnrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .bigbtn{font-family:var(--display);font-size:19px;border:3px solid var(--ink);border-radius:14px;padding:10px 20px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);background:var(--sun)}
+  .bigbtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+  .bigbtn.ghost{background:#fff}
+  .bigbtn:disabled{opacity:.4;cursor:default;box-shadow:4px 4px 0 var(--ink)}
+  .presets{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+  .pbtn{font-family:var(--display);font-size:15px;border:3px solid var(--ink);background:#fff;border-radius:12px;padding:6px 12px;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+  .pbtn.on{background:var(--blue-soft)}
+  .hint{text-align:center;font-family:var(--hand);font-size:18px;color:var(--ink-soft)}
+
+  /* tiles (완전제곱 기하) */
+  .tilebox{display:flex;justify-content:center}
+  .tlbl{font-family:var(--display);font-size:13px}
+
+  .quiz h3{font-family:var(--display);font-size:24px;margin-bottom:4px}
+  .qline{font-family:var(--display);font-size:24px;text-align:center;margin:14px 0}.qline sup{font-size:.55em;vertical-align:super}
+  .qopts{display:grid;gap:12px;max-width:470px;margin:0 auto}
+  .qopt{font-family:var(--display);font-size:20px;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .1s;text-align:left}
+  .qopt:hover{transform:translate(-1px,-1px)}.qopt.right{background:#EAF7E6}.qopt.wrong{background:#FFEFEC}
+  .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
+  footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
+</style>
+</head>
+<body>
+
+<div class="wrap"><a class="backlink" href="../index.html">← 레슨 목록으로</a></div>
+
+<header>
+  <div class="sky"></div>
+  <div class="wrap">
+    <span class="eyebrow">중3 · 이차함수</span>
+    <h1>부등이의 <span class="pop">포물선 변신술</span></h1>
+    <p class="sub">y=ax<sup>2</sup>+bx+c 는 꼭짓점이 숨어 있어요. <br><b>완전제곱식</b>으로 y=a(x−p)<sup>2</sup>+q 로 갈아입히면 꼭짓점이 <b>짠!</b></p>
+    <div class="hero-gator" id="heroGator"></div>
+    <div class="scrollcue">↓ 숨은 꼭짓점을 꺼내보자 ↓</div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ACT 1 -->
+  <section>
+    <div class="act-head"><div class="num">1막</div><h2>꼭짓점은 숨어 있다 <small>같은 포물선, 다른 옷</small></h2></div>
+    <div class="strip two">
+      <div class="cut panel reveal" style="--rot:-1deg">
+        <div class="scene"><span class="cutnum">1</span>
+          <div class="expr" style="font-size:15px;color:var(--ink-soft)">일반형</div>
+          <div class="expr">y = x<sup>2</sup> + 2x − 3</div>
+          <div class="arrow">꼭짓점이 어디?</div>
+          <div class="expr" style="font-size:34px;color:var(--red)">🙈 ?</div>
+        </div>
+        <div class="bubble">일반형(ax²+bx+c)만 봐선 꼭짓점이 <b>안 보여요</b>. b, c에 가려 있거든요. 🕵️</div>
+        <div class="cap">y절편(c=−3)은 보여도, 포물선의 바닥/꼭대기인 <b>꼭짓점</b>은 숨어 있어요.</div>
+      </div>
+      <div class="cut panel reveal" style="--rot:1deg">
+        <div class="scene"><span class="cutnum">2</span>
+          <div class="expr" style="font-size:15px;color:var(--ink-soft)">표준형(꼭짓점형)</div>
+          <div class="expr">y = (x + 1)<sup>2</sup> − 4</div>
+          <div class="arrow">⬇ 그대로 읽기</div>
+          <div class="expr">꼭짓점 <b class="ok">(−1, −4)</b></div>
+        </div>
+        <div class="bubble r">표준형 a(x−p)²+q로 갈아입으면 꼭짓점 <b>(p, q)</b>가 바로! 같은 식이에요 👕</div>
+        <div class="cap">x²+2x−3 = (x+1)²−4 — 전개하면 똑같아요. 옷만 바꾼 거예요.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 2 -->
+  <section>
+    <div class="act-head"><div class="num">2막</div><h2>변신술 = 완전제곱 <small>(반으로)²를 더하고 빼기</small></h2></div>
+    <div class="strip two">
+      <div class="cut panel reveal" style="--rot:1deg">
+        <div class="scene"><span class="cutnum">1</span>
+          <div class="tilebox">
+            <svg viewBox="0 0 150 150" style="width:160px">
+              <rect x="12" y="12" width="84" height="84" fill="#D7F0CE" stroke="#2B2520" stroke-width="2"/>
+              <text class="tlbl" x="54" y="58" text-anchor="middle" fill="#2B2520">x²</text>
+              <rect x="96" y="12" width="38" height="84" fill="#CFE6FF" stroke="#2B2520" stroke-width="2"/>
+              <text class="tlbl" x="115" y="58" text-anchor="middle" fill="#2B2520">2x</text>
+              <rect x="12" y="96" width="84" height="38" fill="#CFE6FF" stroke="#2B2520" stroke-width="2"/>
+              <text class="tlbl" x="54" y="120" text-anchor="middle" fill="#2B2520">2x</text>
+              <rect x="96" y="96" width="38" height="38" fill="#FFC847" stroke="#2B2520" stroke-width="2" stroke-dasharray="4 3"/>
+              <text class="tlbl" x="115" y="118" text-anchor="middle" font-size="11" fill="#2B2520">2²=4</text>
+            </svg>
+          </div>
+          <div class="expr" style="font-size:16px">x² + 4x <b>+ 4</b> = (x + 2)<sup>2</sup></div>
+        </div>
+        <div class="bubble">x²+bx에 <b>(b의 반)²</b>을 채우면 딱 <b>정사각형</b>(완전제곱)이 돼요! 🧩</div>
+        <div class="cap">b=4 → 반은 2 → 모자란 코너 2²=4를 더하면 (x+2)². 그래서 같은 만큼 빼줘요.</div>
+      </div>
+      <div class="cut panel reveal" style="--rot:-1deg">
+        <div class="scene"><span class="cutnum">2</span>
+          <div class="expr" style="font-size:18px;line-height:1.7">
+            x² − 4x − 3<br>
+            = (x² − 4x <b class="ok">+ 4 − 4</b>) − 3<br>
+            = (x − 2)<sup>2</sup> − 4 − 3<br>
+            = (x − 2)<sup>2</sup> − 7
+          </div>
+        </div>
+        <div class="bubble r"><b>더한 만큼 빼면</b> 값은 그대로! 앞 3개를 완전제곱식으로 묶으면 변신 완료 ✨</div>
+        <div class="cap">(b/2)²=4를 더하고 다시 빼서 등식 유지 → (x−2)²−7, 꼭짓점 (2, −7).</div>
+      </div>
+    </div>
+    <div class="panel reveal"><div class="lawcard" style="margin:0">
+      <div class="law" style="background:#EAF7E6"><span class="ic">①</span><div>x², x항을 <b>a로 묶기</b> → a(x² + (b/a)x) + c</div></div>
+      <div class="law"><span class="ic">②</span><div>괄호 안에 <b>(반)² 더하고 빼기</b> → 완전제곱식 a(x−p)² 만들기</div></div>
+      <div class="law"><span class="ic">③</span><div>밖으로 빠진 수 정리 → <b>y=a(x−p)²+q</b>, 꼭짓점 (p, q)</div></div>
+      <div class="law z"><span class="ic">💡</span><div><b>y절편</b>은 변신 안 해도 보여요 — x=0이면 y=<b>c</b> → 점 (0, c).</div></div>
+    </div></div>
+  </section>
+
+  <!-- ACT 3 LAB -->
+  <section>
+    <div class="act-head"><div class="num">3막</div><h2>변신 실험실 <small>단계를 펼쳐 꼭짓점을 꺼내라!</small></h2></div>
+    <div class="board reveal">
+      <div class="presets" id="presets" style="margin-bottom:14px"></div>
+      <div class="labgrid">
+        <div>
+          <div class="eqtop" id="eqTop"></div>
+          <div class="steps" id="steps"></div>
+        </div>
+        <div>
+          <div class="parawrap"><svg id="para" preserveAspectRatio="xMidYMid meet"></svg></div>
+          <div class="status" id="status"></div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="btnrow">
+          <button class="bigbtn" id="nextBtn">다음 단계 ▶</button>
+          <button class="bigbtn ghost" id="resetBtn">↺ 처음</button>
+        </div>
+        <div class="hint">파란 곡선·y절편은 처음부터 보여요. <b>단계를 끝까지</b> 펼치면 노란 <b>꼭짓점</b>이 켜져요!</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 생활 한 줄 -->
+  <section>
+    <div class="panel reveal" style="background:linear-gradient(180deg,#EAF6FF,#fff)">
+      <div class="law" style="background:#fff;border:none;padding:4px"><span class="ic">⛲</span><div><b>생활 속:</b> 분수 물줄기는 포물선! 식을 표준형으로 변신하면 <b>꼭짓점 q = 물줄기가 닿는 최고 높이</b>를 바로 알 수 있어요.</div></div>
+    </div>
+  </section>
+
+  <!-- 마무리 -->
+  <section class="quiz">
+    <div class="act-head"><div class="num">마무리</div><h2>스스로 풀기 <small>변신하고 꼭짓점 읽기</small></h2></div>
+    <div class="lawcard reveal">
+      <div class="law z"><span class="ic">🪄</span><div>(반)²을 더하고 빼서 완전제곱 → y=a(x−p)²+q, 꼭짓점 (p,q) · y절편 (0,c)</div></div>
+    </div>
+    <div class="panel reveal">
+      <h3>퀴즈 1</h3>
+      <div class="qline">y = x<sup>2</sup> + 2x − 3 을 표준형으로 변신하면?</div>
+      <div class="qopts" data-right="정답! 🎉 (2의 반)²=1 더하고 빼서 (x+1)²−1−3 = (x+1)²−4. 꼭짓점 (−1,−4)." data-wrong="앗! x²+2x+1−1−3 = (x+1)²−4 예요. (2÷2)²=1을 더하고 뺐죠.">
+        <button class="qopt" data-correct="true">(x + 1)<sup>2</sup> − 4 <span style="font-size:.7em;color:var(--ink-soft)">꼭짓점 (−1,−4)</span></button>
+        <button class="qopt" data-correct="false">(x + 1)<sup>2</sup> − 3</button>
+        <button class="qopt" data-correct="false">(x + 2)<sup>2</sup> − 4</button>
+      </div>
+      <div class="qfeedback"></div>
+    </div>
+    <div class="panel reveal" style="margin-top:16px">
+      <h3>퀴즈 2</h3>
+      <div class="qline">x<sup>2</sup> + 8x + □ = (x + 4)<sup>2</sup> 의 □ 는?</div>
+      <div class="qopts" data-right="정답! 🎉 (8의 반)² = 4² = 16. 일차항 계수의 반을 제곱해요." data-wrong="앗! (b의 반)² = (8÷2)² = 4² = 16 이에요.">
+        <button class="qopt" data-correct="true">16 <span style="font-size:.7em;color:var(--ink-soft)">(8÷2)²</span></button>
+        <button class="qopt" data-correct="false">8</button>
+        <button class="qopt" data-correct="false">64</button>
+      </div>
+      <div class="qfeedback"></div>
+    </div>
+    <div class="panel reveal" style="margin-top:16px">
+      <h3>퀴즈 3</h3>
+      <div class="qline">y = −x<sup>2</sup> + 6x − 2 의 꼭짓점은?</div>
+      <div class="qopts" data-right="정답! 🎉 −(x²−6x)−2 = −(x−3)²+9−2 = −(x−3)²+7. 꼭짓점 (3,7)." data-wrong="앗! −(x²−6x+9−9)−2 = −(x−3)²+7. 꼭짓점은 (3,7)이에요 (부호 주의!).">
+        <button class="qopt" data-correct="true">(3, 7)</button>
+        <button class="qopt" data-correct="false">(3, −7)</button>
+        <button class="qopt" data-correct="false">(−3, 7)</button>
+      </div>
+      <div class="qfeedback"></div>
+    </div>
+  </section>
+</main>
+
+<footer>부등이의 포물선 변신술 끝! 🪄🐊<br><span style="font-size:15px">MathMotion · 움직임으로 배우는 수학</span></footer>
+
+<script>
+function gatorSVG(){
+  return `<svg class="gator" viewBox="0 0 130 100" xmlns="http://www.w3.org/2000/svg">
+    <path class="bodyd" d="M14 58 q-12 4 -8 16 q10 -2 16 -8 z"/><ellipse class="bodyd" cx="40" cy="78" rx="9" ry="7"/>
+    <path class="body" d="M52 50 Q30 18 16 36 Q6 52 22 64 Q34 74 56 64 Z"/><ellipse class="belly" cx="34" cy="60" rx="14" ry="9"/>
+    <path class="mouth" d="M52 51 L122 22 L122 80 Z"/>
+    <path class="bodyd" d="M50 44 L120 18 Q128 18 126 28 L56 52 Z"/><path class="body" d="M52 58 L120 84 Q128 84 126 74 L58 54 Z"/>
+    <path class="teeth" d="M64 48 l5 7 l5 -9 l5 7 l5 -9 l5 7 l5 -9 l5 7 l5 -9 l4 6 l3 -7 l-52 19 z"/>
+    <path class="teeth" d="M66 53 l4 -6 l5 8 l5 -6 l5 8 l5 -6 l5 8 l5 -6 l5 8 l4 -5 l3 6 l-55 -1 z" opacity=".95"/>
+    <circle class="body" cx="30" cy="30" r="11"/><circle class="eyew" cx="31" cy="29" r="7"/>
+    <circle class="pupil" cx="33" cy="30" r="3.6"/><circle class="eyew" cx="34.4" cy="28.6" r="1.2"/>
+    <circle class="pupil" cx="22" cy="44" r="2"/><circle cx="26" cy="50" r="4" fill="#ff9aa0" opacity=".55"/>
+  </svg>`;
+}
+document.getElementById('heroGator').innerHTML=gatorSVG();
+
+/* reveal */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.16});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%2*70)+'ms';io.observe(el)});
+
+/* ---------- LAB: 완전제곱 변신 ---------- */
+const LAB=[
+  {a:1,b:2,c:-3, vx:-1,vy:-4, gen:'y = x<sup>2</sup> + 2x − 3',
+   steps:[
+     {l:'y = (x<sup>2</sup> + 2x) − 3', n:'x²·x항 묶기 (a=1)'},
+     {l:'= (x<sup>2</sup> + 2x + 1 − 1) − 3', n:'(2÷2)²=1 더하고 빼기'},
+     {l:'= (x + 1)<sup>2</sup> − 1 − 3', n:'앞 3개를 완전제곱식으로'},
+     {l:'= (x + 1)<sup>2</sup> − 4', n:'정리 → 꼭짓점 (−1, −4)'},
+   ]},
+  {a:2,b:-4,c:3, vx:1,vy:1, gen:'y = 2x<sup>2</sup> − 4x + 3',
+   steps:[
+     {l:'y = 2(x<sup>2</sup> − 2x) + 3', n:'a=2 로 묶기'},
+     {l:'= 2(x<sup>2</sup> − 2x + 1 − 1) + 3', n:'(2÷2)²=1 더하고 빼기'},
+     {l:'= 2(x − 1)<sup>2</sup> − 2·1 + 3', n:'완전제곱 + 빼낸 −1 밖으로 ×2'},
+     {l:'= 2(x − 1)<sup>2</sup> + 1', n:'정리 → 꼭짓점 (1, 1)'},
+   ]},
+  {a:-1,b:6,c:-2, vx:3,vy:7, gen:'y = −x<sup>2</sup> + 6x − 2',
+   steps:[
+     {l:'y = −(x<sup>2</sup> − 6x) − 2', n:'a=−1 로 묶기 (부호 주의!)'},
+     {l:'= −(x<sup>2</sup> − 6x + 9 − 9) − 2', n:'(6÷2)²=9 더하고 빼기'},
+     {l:'= −(x − 3)<sup>2</sup> + 9 − 2', n:'완전제곱 + (−1)×(−9)=+9'},
+     {l:'= −(x − 3)<sup>2</sup> + 7', n:'정리 → 꼭짓점 (3, 7)'},
+   ]},
+];
+let li=0, sc=0; // preset index, revealed step count
+
+const XMIN=-4,XMAX=8,YMIN=-7,YMAX=10,PW=340,PH=320,PAD=22;
+const para=document.getElementById('para'), eqTop=document.getElementById('eqTop'), stepsEl=document.getElementById('steps'), statusEl=document.getElementById('status'), presetsEl=document.getElementById('presets'), nextBtn=document.getElementById('nextBtn'), resetBtn=document.getElementById('resetBtn');
+para.setAttribute('viewBox',`0 0 ${PW} ${PH}`);
+const PX=x=>PAD+(x-XMIN)/(XMAX-XMIN)*(PW-2*PAD);
+const PY=y=>PAD+(YMAX-y)/(YMAX-YMIN)*(PH-2*PAD);
+
+function f(x){const d=LAB[li];return d.a*x*x+d.b*x+d.c;}
+function curvePts(){let pts=[];for(let t=XMIN;t<=XMAX+1e-9;t+=0.04){const y=f(t);if(y>YMAX+0.4||y<YMIN-0.4)continue;pts.push(`${PX(t).toFixed(1)},${PY(y).toFixed(1)}`);}return pts.join(' ');}
+
+function renderGraph(){
+  const d=LAB[li], done=sc>=d.steps.length;
+  let s='';
+  for(let gx=XMIN;gx<=XMAX;gx++){s+=`<line class="grid" x1="${PX(gx)}" y1="${PAD}" x2="${PX(gx)}" y2="${PH-PAD}"/>`;}
+  for(let gy=YMIN;gy<=YMAX;gy++){s+=`<line class="grid" x1="${PAD}" y1="${PY(gy)}" x2="${PW-PAD}" y2="${PY(gy)}"/>`;}
+  if(done){s+=`<line class="symaxis" x1="${PX(d.vx)}" y1="${PAD}" x2="${PX(d.vx)}" y2="${PH-PAD}"/>`;}
+  s+=`<line class="axis" x1="${PX(XMIN)}" y1="${PY(0)}" x2="${PX(XMAX)}" y2="${PY(0)}"/>`;
+  s+=`<line class="axis" x1="${PX(0)}" y1="${PAD}" x2="${PX(0)}" y2="${PH-PAD}"/>`;
+  for(let gx=XMIN+2;gx<=XMAX-1;gx+=2){if(gx===0)continue;s+=`<text class="ticklbl" x="${PX(gx)}" y="${PY(0)+13}" text-anchor="middle">${gx}</text>`;}
+  s+=`<polyline class="pl" points="${curvePts()}"/>`;
+  // y절편 (0,c) — 항상
+  s+=`<circle class="yint" cx="${PX(0)}" cy="${PY(d.c)}" r="5"/>`;
+  s+=`<text class="yintlbl" x="${PX(0)-8}" y="${PY(d.c)+4}" text-anchor="end">(0, ${d.c})</text>`;
+  // 꼭짓점 — 완성 시에만
+  if(done){
+    s+=`<circle class="vtx" cx="${PX(d.vx)}" cy="${PY(d.vy)}" r="7"/>`;
+    s+=`<text class="vtxlbl" x="${PX(d.vx)}" y="${PY(d.vy)+(d.a<0?-12:20)}">(${d.vx}, ${d.vy})</text>`;
+  } else {
+    s+=`<text class="qmark" x="${PX(d.vx)}" y="${PY(d.vy)+(d.a<0?-8:8)}" text-anchor="middle">?</text>`;
+  }
+  para.innerHTML=s;
+}
+function renderSteps(){
+  const d=LAB[li];
+  stepsEl.innerHTML=d.steps.map((st,i)=>{
+    const fin=i===d.steps.length-1;
+    return `<div class="stepline ${i<sc?'show':''} ${fin?'final':''}">${st.l}<span class="note">${i<sc?st.n:'&nbsp;'}</span></div>`;
+  }).join('');
+}
+function renderStatus(){
+  const d=LAB[li], done=sc>=d.steps.length;
+  if(done){ statusEl.innerHTML=`✨ 변신 완료! 꼭짓점 <b style="color:var(--gator-d)">(${d.vx}, ${d.vy})</b> · 대칭축 x=${d.vx}`; statusEl.style.color='var(--gator-d)'; }
+  else { statusEl.innerHTML=`🙈 아직 일반형… 꼭짓점이 숨어 있어요 (${sc}/${d.steps.length})`; statusEl.style.color='var(--ink-soft)'; }
+  nextBtn.disabled=done; nextBtn.textContent=done?'변신 완료 ✓':'다음 단계 ▶';
+}
+function render(){ eqTop.innerHTML=LAB[li].gen; renderSteps(); renderGraph(); renderStatus(); }
+
+nextBtn.onclick=()=>{ if(sc<LAB[li].steps.length){sc++;render();} };
+resetBtn.onclick=()=>{ sc=0; render(); };
+presetsEl.innerHTML=LAB.map((d,i)=>`<button class="pbtn ${i===0?'on':''}" data-i="${i}">${d.gen.replace('y = ','')}</button>`).join('');
+presetsEl.addEventListener('click',e=>{const b=e.target.closest('.pbtn');if(!b)return;li=+b.dataset.i;sc=0;document.querySelectorAll('.pbtn').forEach((q,j)=>q.classList.toggle('on',j===li));render();});
+
+/* quiz */
+document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
+  const btn=e.target.closest('.qopt'); if(!btn)return;
+  const fb=box.parentElement.querySelector('.qfeedback');
+  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;}
+  else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML=box.dataset.wrong;}
+}));
+
+render();
+</script>
+</body>
+</html>
