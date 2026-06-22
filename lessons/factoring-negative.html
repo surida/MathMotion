@@ -98,6 +98,11 @@
   .qopt{font-family:var(--display);font-size:20px;border:3px solid var(--ink);background:#fff;border-radius:14px;padding:14px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);transition:transform .1s;text-align:left}
   .qopt:hover{transform:translate(-1px,-1px)}.qopt.right{background:#EAF7E6}.qopt.wrong{background:#FFEFEC}
   .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
+  .lvbadge{display:inline-block;font-family:var(--display);font-size:14px;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin-right:8px;vertical-align:middle}
+  .lvbadge.b1{background:#E1F4DA}.lvbadge.b2{background:#CFE6FF}.lvbadge.b3{background:#FFD9B0}
+  .morebtn{display:block;margin:18px auto 0;font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:var(--sun);border-radius:14px;padding:11px 24px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+  .morebtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+  .cleared{text-align:center;font-family:var(--display);font-size:22px;color:var(--gator-d);margin-top:18px}
   footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
 </style>
 </head>
@@ -211,8 +216,9 @@
     <div class="lawcard reveal">
       <div class="law s"><span class="ic">🕵️</span><div>곱=상수항, 합=x계수 · 상수항 <b>+</b>→같은 부호 / <b>−</b>→다른 부호</div></div>
     </div>
-    <div class="panel reveal">
-      <h3>퀴즈 1</h3>
+    <!-- Lv1 기본 · 둘 다 음수 -->
+    <div class="panel reveal tier" data-tier="1">
+      <h3><span class="lvbadge b1">Lv1 · 기본</span>상수 + · 합 −</h3>
       <div class="qline">x<sup>2</sup> − 5x + 6 = ?</div>
       <div class="qopts" data-right="정답! 🎉 상수항 +6→같은 부호, 합 −5→둘 다 음수 → −2,−3 → (x−2)(x−3)." data-wrong="앗! 상수항 +6이라 같은 부호, 합 −5라 둘 다 음수 → (x−2)(x−3)">
         <button class="qopt" data-correct="true">(x−2)(x−3)</button>
@@ -220,9 +226,12 @@
         <button class="qopt" data-correct="false">(x−1)(x−6)</button>
       </div>
       <div class="qfeedback"></div>
+      <button class="morebtn" data-next="2" hidden>🔥 더 도전!</button>
     </div>
-    <div class="panel reveal" style="margin-top:16px">
-      <h3>퀴즈 2</h3>
+
+    <!-- Lv2 응용 · 부호 다름 -->
+    <div class="panel tier" data-tier="2" hidden>
+      <h3><span class="lvbadge b2">Lv2 · 응용</span>상수 − · 부호 다름</h3>
       <div class="qline">x<sup>2</sup> + x − 6 = ?</div>
       <div class="qopts" data-right="정답! 🎉 상수항 −6→다른 부호, 합 +1 → +3,−2 → (x+3)(x−2)." data-wrong="앗! 상수항 −6이라 다른 부호, 합 +1 → 큰 수가 +: +3,−2 → (x+3)(x−2)">
         <button class="qopt" data-correct="true">(x+3)(x−2)</button>
@@ -230,6 +239,20 @@
         <button class="qopt" data-correct="false">(x+1)(x−6)</button>
       </div>
       <div class="qfeedback"></div>
+      <button class="morebtn" data-next="3" hidden>🔥 더 도전!</button>
+    </div>
+
+    <!-- Lv3 심화 · 큰 수 + 부호 다름 -->
+    <div class="panel tier" data-tier="3" hidden>
+      <h3><span class="lvbadge b3">Lv3 · 심화 🔥</span>큰 수 + 부호 다름</h3>
+      <div class="qline">x<sup>2</sup> − 2x − 15 = ?</div>
+      <div class="qopts" data-right="정답! 🎉 상수항 −15→다른 부호, 합 −2 → 큰 수가 −: −5,+3 → (x−5)(x+3)." data-wrong="앗! 곱 −15(다른 부호), 합 −2 → 큰 수가 − → −5,+3 → (x−5)(x+3).">
+        <button class="qopt" data-correct="true">(x−5)(x+3)</button>
+        <button class="qopt" data-correct="false">(x+5)(x−3)</button>
+        <button class="qopt" data-correct="false">(x−15)(x+1)</button>
+      </div>
+      <div class="qfeedback"></div>
+      <div class="cleared" hidden>🏆 부호 탐정 완벽! 🐊</div>
     </div>
   </section>
 </main>
@@ -299,8 +322,16 @@ document.getElementById('presets').addEventListener('click',e=>{const btn=e.targ
 document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
   const btn=e.target.closest('.qopt'); if(!btn)return;
   const fb=box.parentElement.querySelector('.qfeedback');
-  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;}
+  if(btn.dataset.correct==='true'){
+    btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;
+    const tier=box.closest('.tier');
+    if(tier){const m=tier.querySelector('.morebtn');if(m)m.hidden=false;const d=tier.querySelector('.cleared');if(d)d.hidden=false;}
+  }
   else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML=box.dataset.wrong;}
+}));
+document.querySelectorAll('.morebtn').forEach(b=>b.addEventListener('click',()=>{
+  const next=document.querySelector('.tier[data-tier="'+b.dataset.next+'"]');
+  if(next){next.hidden=false;next.classList.add('reveal','in');b.hidden=true;next.scrollIntoView({behavior:'smooth',block:'center'});}
 }));
 
 document.querySelector('.pbtn')&&document.querySelectorAll('.pbtn')[0].classList.add('on');
