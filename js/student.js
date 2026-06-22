@@ -13,6 +13,10 @@
   function get() { try { return JSON.parse(localStorage.getItem(LS) || 'null'); } catch (e) { return null; } }
   function set(o) { localStorage.setItem(LS, JSON.stringify(o)); }
   function clear() { localStorage.removeItem(LS); }
+
+  // 같은 탭 세션 동안 "이미 확인함" 표시 — 앱 내 이동 시 재확인 방지(탭 닫으면 사라짐)
+  function sessionMark() { try { var s = get(); if (s) sessionStorage.setItem('mm-session', s.id); } catch (e) {} }
+  function sessionOK() { try { var s = get(); return !!s && sessionStorage.getItem('mm-session') === s.id; } catch (e) { return false; } }
   function esc(t) { return (t || '').replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]); }); }
 
   /* ---------- 스타일 ---------- */
@@ -72,7 +76,7 @@
       cl.rpc('join_class', { p_code: c, p_name: n }).then(function (res) {
         if (res.error || !res.data) { err.textContent = '코드를 확인해 주세요.'; return; }
         var stu = { id: res.data, name: n, code: c.toUpperCase() };
-        set(stu); close(); pill();
+        set(stu); sessionMark(); close(); pill();
         if (opts.onDone) opts.onDone(stu);
       });
     }
@@ -91,17 +95,22 @@
         '<button class="mm-btn ghost" id="mmOther">다른 학생</button>' +
         '<button class="mm-btn" id="mmYes">네, 시작</button>' +
       '</div>');
-    ov.querySelector('#mmYes').onclick = function () { close(); pill(); if (opts && opts.onDone) opts.onDone(s); };
+    ov.querySelector('#mmYes').onclick = function () { sessionMark(); close(); pill(); if (opts && opts.onDone) opts.onDone(s); };
     ov.querySelector('#mmOther').onclick = function () { openEntry(opts); };
   }
 
   /* ---------- 진입점 ---------- */
-  // index 게이트: 있으면 확인, 없으면 입장 → 통과 시 onDone
-  function gate(opts) { if (get()) openConfirm(opts); else openEntry(opts); }
-  // 레슨: 있으면 즉시 통과(확인 생략), 없으면 입장(닫기 불가) → 통과 시 onDone
+  // index 게이트: 이번 탭 세션에서 이미 확인했으면 그냥 통과(앱 내 이동),
+  //   아니면 확인(있을 때)/입장(없을 때). → 통과 시 onDone
+  function gate(opts) {
+    var s = get();
+    if (s && sessionOK()) { pill(); if (opts && opts.onDone) opts.onDone(s); return; }
+    if (s) openConfirm(opts); else openEntry(opts);
+  }
+  // 레슨: 있으면 즉시 통과(확인 생략) + 세션 표시, 없으면 입장(닫기 불가) → 통과 시 onDone
   function require_(opts) {
     var s = get();
-    if (s) { pill(); if (opts && opts.onDone) opts.onDone(s); }
+    if (s) { sessionMark(); pill(); if (opts && opts.onDone) opts.onDone(s); }
     else openEntry(opts);
   }
 
