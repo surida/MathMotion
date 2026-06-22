@@ -110,6 +110,11 @@
   .qopt:hover{transform:translate(-1px,-1px)}
   .qopt.right{background:#EAF7E6}.qopt.wrong{background:#FFEFEC}
   .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
+  .lvbadge{display:inline-block;font-family:var(--display);font-size:14px;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin-right:8px;vertical-align:middle}
+  .lvbadge.b1{background:#E1F4DA}.lvbadge.b2{background:#CFE6FF}.lvbadge.b3{background:#FFD9B0}
+  .morebtn{display:block;margin:18px auto 0;font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:var(--sun);border-radius:14px;padding:11px 24px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+  .morebtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+  .cleared{text-align:center;font-family:var(--display);font-size:22px;color:var(--gator-d);margin-top:18px}
 
   .lawcard{display:grid;gap:14px;margin:10px 0}
   footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
@@ -259,16 +264,45 @@
       <div class="law b"><span class="ic">🪜</span><div><b>b</b> → 출발 발판 높이(y절편). 위아래로 이동</div></div>
       <div class="law a"><span class="ic">📐</span><div><b>a</b> → 한 칸의 높이(기울기). x가 1 늘 때 y의 변화</div></div>
     </div>
-    <div class="panel reveal">
-      <h3>퀴즈 한 문제</h3>
+    <!-- Lv1 기본 · 기울기 읽기 -->
+    <div class="panel reveal tier" data-tier="1">
+      <h3><span class="lvbadge b1">Lv1 · 기본</span>기울기 읽기</h3>
       <p><b>y = 2x + 3</b> 계단을 <b>한 칸(x가 1)</b> 오르면, y는 얼마나 올라갈까요?</p>
       <div class="qline">y = 2x + 3</div>
-      <div class="qopts" id="qopts">
+      <div class="qopts" data-right="정답! 🎉 x가 1 늘면 y는 기울기 a(=2)만큼! 출발 b(=3)는 시작점일 뿐." data-wrong="앗! 한 칸 오를 때 양 = 기울기 a. y=2x+3은 a=2 → 2칸 🪜">
         <button class="qopt" data-correct="true">2칸</button>
         <button class="qopt" data-correct="false">3칸</button>
         <button class="qopt" data-correct="false">5칸</button>
       </div>
-      <div class="qfeedback" id="qfeedback"></div>
+      <div class="qfeedback"></div>
+      <button class="morebtn" data-next="2" hidden>🔥 더 도전!</button>
+    </div>
+
+    <!-- Lv2 응용 · 대입 -->
+    <div class="panel tier" data-tier="2" hidden>
+      <h3><span class="lvbadge b2">Lv2 · 응용</span>x값 넣어 y 구하기</h3>
+      <p><b>y = 2x + 3</b> 에서 <b>x = 4</b> 일 때 y는?</p>
+      <div class="qline">y = 2x + 3</div>
+      <div class="qopts" data-right="정답! 🎉 x=4 대입: 2×4+3 = 8+3 = 11." data-wrong="앗! x=4를 대입해요: 2×4+3 = 11 (기울기×x + 절편).">
+        <button class="qopt" data-correct="true">11</button>
+        <button class="qopt" data-correct="false">8</button>
+        <button class="qopt" data-correct="false">5</button>
+      </div>
+      <div class="qfeedback"></div>
+      <button class="morebtn" data-next="3" hidden>🔥 더 도전!</button>
+    </div>
+
+    <!-- Lv3 심화 · 식 세우기 -->
+    <div class="panel tier" data-tier="3" hidden>
+      <h3><span class="lvbadge b3">Lv3 · 심화 🔥</span>식 세우기</h3>
+      <p>기울기가 <b>3</b>, y절편(출발)이 <b>−2</b> 인 일차함수의 식은?</p>
+      <div class="qopts" data-right="정답! 🎉 기울기는 x의 계수(3), y절편은 상수(−2) → y=3x−2." data-wrong="앗! 기울기=x의 계수, y절편=상수항 → y=3x−2 예요.">
+        <button class="qopt" data-correct="true">y = 3x − 2</button>
+        <button class="qopt" data-correct="false">y = −2x + 3</button>
+        <button class="qopt" data-correct="false">y = 3x + 2</button>
+      </div>
+      <div class="qfeedback"></div>
+      <div class="cleared" hidden>🏆 기울기·대입·식 세우기까지 완벽! 🐊</div>
     </div>
   </section>
 </main>
@@ -437,12 +471,20 @@ const whyBtn=document.getElementById('whyBtn');
 whyBtn.addEventListener('click',()=>{whyOn=!whyOn;whyBtn.classList.toggle('on',whyOn);whyBtn.textContent=whyOn?'한 칸 숨기기':'왜? 한 칸 보기';renderDyn()});
 
 // quiz
-document.getElementById('qopts').addEventListener('click',e=>{
+document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
   const btn=e.target.closest('.qopt'); if(!btn)return;
-  const fb=document.getElementById('qfeedback');
-  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.textContent='정답! 🎉 x가 1 늘면 y는 기울기 a(=2)만큼 올라가요. 출발 높이 b(=3)는 시작점일 뿐!';}
-  else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.textContent='앗! 한 칸 오를 때 올라가는 양은 기울기 a예요. y=2x+3에선 a=2 → 2칸! 🪜';}
-});
+  const fb=box.parentElement.querySelector('.qfeedback');
+  if(btn.dataset.correct==='true'){
+    btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;
+    const tier=box.closest('.tier');
+    if(tier){const m=tier.querySelector('.morebtn');if(m)m.hidden=false;const d=tier.querySelector('.cleared');if(d)d.hidden=false;}
+  }
+  else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML=box.dataset.wrong;}
+}));
+document.querySelectorAll('.morebtn').forEach(b=>b.addEventListener('click',()=>{
+  const next=document.querySelector('.tier[data-tier="'+b.dataset.next+'"]');
+  if(next){next.hidden=false;next.classList.add('reveal','in');b.hidden=true;next.scrollIntoView({behavior:'smooth',block:'center'});}
+}));
 
 render();
 moveClimber();
