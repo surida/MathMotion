@@ -28,14 +28,29 @@ git push origin main
 curl -s -o /dev/null -w "%{http_code}" https://surida.github.io/MathMotion/lessons/<id>.html
 ```
 
-There is **no test suite**. Verify changes with these two techniques instead:
+**Primary check — the E2E suite. Run it after any lesson/JS change:**
 
 ```bash
-# 1. JS syntax check (lesson inline scripts and js/*.js)
-node -e 'new Function(require("fs").readFileSync("js/tracker.js","utf8")); console.log("OK")'
-#    for a lesson's inline <script>, extract it then new Function() it.
+npm test          # node tests/e2e.js
+```
 
-# 2. Headless render + screenshot, then Read the PNG to verify visuals
+`tests/e2e.js` drives the **installed Chrome** via `puppeteer-core` (a dev dependency; no
+browser is downloaded, `node_modules` is gitignored). It serves the repo from a temp static
+server, blocks external requests (CDN/fonts) for speed + determinism, and uses an **isolated
+browser context per case** so `localStorage` never leaks between tests. It sweeps every
+lesson and asserts: entry gate blocks when not joined / no gate after joining / options carry
+no answer giveaways (✔·"— hint"·misconception parens, incl. JS-injected) / option order
+shuffles across loads / feedback shows on a correct click / tiered lessons unlock Lv2→Lv3.
+Exit code is non-zero on any failure. Add a check by following the existing `check(name, ok)`
+pattern when you add a feature.
+
+**Secondary checks (for quick local debugging or visual confirmation):**
+
+```bash
+# JS syntax check (a js/*.js file, or a lesson's extracted inline <script>)
+node -e 'new Function(require("fs").readFileSync("js/tracker.js","utf8")); console.log("OK")'
+
+# Headless render + screenshot, then Read the PNG to verify visuals
 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new \
   --disable-gpu --hide-scrollbars --screenshot=/tmp/x.png --window-size=900,4200 \
   --virtual-time-budget=3000 "file://$PWD/lessons/<id>.html"
