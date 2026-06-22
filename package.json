@@ -1,0 +1,27 @@
+{
+  "name": "mathmotion",
+  "version": "1.0.0",
+  "description": "> 외우지 말고 **원리로!** 움직임(Motion)으로 배우는 중학 수학",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "node tests/e2e.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/surida/MathMotion.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/surida/MathMotion/issues"
+  },
+  "homepage": "https://github.com/surida/MathMotion#readme",
+  "devDependencies": {
+    "puppeteer-core": "^25.1.0"
+  }
+}
