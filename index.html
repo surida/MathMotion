@@ -145,6 +145,9 @@
   <footer>외우지 말고 <b>원리</b>로! 계속 새로운 레슨이 추가됩니다 ✏️</footer>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script src="js/student.js"></script>
 <script>
 /* ---------- 레슨 풀 (개념 단위, 교과서 공유) ---------- */
 const LESSONS = {
@@ -294,11 +297,17 @@ document.getElementById('gradeChip').addEventListener('click',()=>showLanding(lo
 document.getElementById('pubChip').addEventListener('click',()=>showLanding(localStorage.getItem(KEY_G)));
 document.getElementById('homeBtn').addEventListener('click',e=>{e.preventDefault();showLanding(localStorage.getItem(KEY_G));});
 
-/* ----- INIT ----- */
+/* ----- INIT (학생 게이트 통과 후 시작) ----- */
 (function(){
-  const g=localStorage.getItem(KEY_G), p=localStorage.getItem(KEY_P);
-  if(g&&p&&CURRICULUM[g]&&CURRICULUM[g][p]) showMenu(g,p);
-  else showLanding(g);
+  function start(){
+    const g=localStorage.getItem(KEY_G), p=localStorage.getItem(KEY_P);
+    if(g&&p&&CURRICULUM[g]&&CURRICULUM[g][p]) showMenu(g,p);
+    else showLanding(g);
+  }
+  if(window.MMStudent){
+    landingEl.hidden=true; menuEl.hidden=true;   // 게이트 통과 전엔 가림
+    MMStudent.gate({ onDone:start });
+  } else { start(); }
 })();
 </script>
 </body>
