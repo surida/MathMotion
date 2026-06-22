@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MathMotion · 교사 대시보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#FBF3E2;--paper-2:#F4E7CC;--ink:#2B2520;--ink-soft:#5A5046;--gator:#7CC36A;--gator-d:#4E9E48;--blue:#2E7BC4;--blue-soft:#CFE6FF;--red:#E8584E;--sun:#FFC847;--grid:#D9C7A2;--shadow:5px 5px 0 var(--ink);--display:'Jua',sans-serif;--hand:'Gaegu',cursive;--body:'Gowun Dodum',sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);color:var(--ink);background:var(--paper);background-image:radial-gradient(var(--paper-2) 1.3px,transparent 1.4px);background-size:14px 14px;line-height:1.6;padding:20px}
+  .wrap{max-width:1000px;margin:0 auto}
+  h1{font-family:var(--display);font-size:30px;text-shadow:3px 3px 0 var(--sun)}
+  h2{font-family:var(--display);font-size:21px;margin:22px 0 10px}
+  .card{background:#fff;border:4px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:20px;margin-top:16px}
+  input,select{font-family:var(--body);font-size:16px;border:3px solid var(--ink);border-radius:11px;padding:9px 12px;background:#fff}
+  button{font-family:var(--display);font-size:16px;border:3px solid var(--ink);border-radius:12px;padding:9px 16px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);background:var(--sun)}
+  button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  button.ghost{background:#fff}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--ink-soft);font-size:14px}
+  .code{font-family:var(--display);font-size:20px;letter-spacing:2px;background:var(--blue-soft);border:3px solid var(--ink);border-radius:10px;padding:4px 12px}
+  table{border-collapse:collapse;width:100%;margin-top:8px;font-size:14px}
+  th,td{border:2px solid var(--grid);padding:7px 9px;text-align:center}
+  th{background:var(--paper-2);font-family:var(--display);font-weight:400}
+  td.name{text-align:left;font-family:var(--display);background:#FFFDF6}
+  .cell{cursor:pointer;font-family:var(--display)}
+  .c-ok{background:#E1F4DA}.c-ok2{background:#FFF3D6}.c-no{background:#FFE0DC}.c-na{background:#F1ECE0;color:#B6AB98}
+  .err{color:var(--red);font-family:var(--display);min-height:20px}
+  .pill{display:inline-block;background:var(--paper-2);border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin:3px;font-size:13px}
+  .hidden{display:none}
+  .drill{background:#FFFDF6;border:3px dashed var(--ink);border-radius:12px;padding:14px;margin-top:14px}
+  .drill .step{font-family:var(--display);padding:4px 0;border-bottom:1px dashed var(--grid)}
+  .ok{color:var(--gator-d)}.bad{color:var(--red)}
+  .legend{font-size:13px;color:var(--ink-soft);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>📊 MathMotion 교사 대시보드</h1>
+
+  <!-- 로그인 -->
+  <div id="login" class="card hidden">
+    <h2>로그인</h2>
+    <p class="muted">교사 이메일로 <b>로그인 링크</b>를 보내드려요. 메일의 링크를 누르면 이 페이지로 돌아옵니다.</p>
+    <div class="row" style="margin-top:12px">
+      <input id="email" type="email" placeholder="email@example.com" style="flex:1;min-width:220px">
+      <button id="sendLink">링크 보내기</button>
+    </div>
+    <p class="err" id="loginMsg"></p>
+  </div>
+
+  <!-- 앱 -->
+  <div id="app" class="hidden">
+    <div class="card">
+      <div class="row" style="justify-content:space-between">
+        <div class="row">
+          <h2 style="margin:0">학급</h2>
+          <select id="classSel"></select>
+          <button class="ghost" id="newClass">+ 새 학급</button>
+        </div>
+        <div class="row"><span class="muted" id="who"></span><button class="ghost" id="logout">로그아웃</button></div>
+      </div>
+      <div class="row" id="codeRow" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card" id="board">
+      <div class="row" style="justify-content:space-between">
+        <h2 style="margin:0">풀이 현황</h2>
+        <div class="row"><span class="muted">레슨</span><select id="lessonSel"></select><button class="ghost" id="refresh">↻ 새로고침</button></div>
+      </div>
+      <div id="matrix"></div>
+      <div class="legend">✓(n) = n번 만에 정답 · ✗ = 끝내 못 맞힘 · — = 미응시 · 셀을 누르면 시도 내역</div>
+      <div id="drill" class="drill hidden"></div>
+    </div>
+
+    <div class="card" id="aggCard">
+      <h2 style="margin-top:0">오개념 집계 <span class="muted">(문제별 오답 분포)</span></h2>
+      <div id="agg"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase-config.js"></script>
+<script>
+const sb = window.supabase.createClient(window.MM_SUPABASE_URL, window.MM_SUPABASE_ANON);
+const $ = id => document.getElementById(id);
+const LESSON_TITLES = {
+  'repeating-decimal':'순환소수','exponent-laws':'지수의 곱','exponent-division':'지수의 나눗셈',
+  'ineq-mirror':'일차부등식','simultaneous-equations':'연립방정식','linear-stairs':'일차함수','linear-equation':'일차방정식',
+  'square-root':'제곱근','sqrt-mul-div':'제곱근 곱·나눗셈','sqrt-add-sub':'제곱근 덧셈·뺄셈',
+  'factoring':'인수분해','factoring-negative':'인수분해(음수)',
+  'quadratic-eq':'이차방정식 AB=0','quadratic-formula':'근의 공식',
+  'quadratic-function':'이차함수 y=ax²','quadratic-shift':'이차함수 평행이동',
+  'quadratic-standard':'이차함수 y=ax²+bx+c','quadratic-find':'이차함수 식 구하기',
+  'quadratic-roots-graph':'이차함수와 이차방정식'
+};
+const lt = id => LESSON_TITLES[id] || id;
+const esc = t => (t||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let classes=[], curClass=null, students=[], attempts=[], curLesson=null;
+
+/* ---------- 인증 ---------- */
+async function refreshAuth(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if(session){ $('login').classList.add('hidden'); $('app').classList.remove('hidden'); $('who').textContent=session.user.email; await loadClasses(); }
+  else { $('app').classList.add('hidden'); $('login').classList.remove('hidden'); }
+}
+$('sendLink').onclick = async ()=>{
+  const email = $('email').value.trim();
+  if(!email){ $('loginMsg').textContent='이메일을 입력해요.'; return; }
+  $('loginMsg').textContent='보내는 중…';
+  const { error } = await sb.auth.signInWithOtp({ email, options:{ emailRedirectTo: location.href.split('#')[0] } });
+  $('loginMsg').textContent = error ? ('오류: '+error.message) : '메일을 확인해 로그인 링크를 눌러주세요. ✉️';
+};
+$('logout').onclick = async ()=>{ await sb.auth.signOut(); location.reload(); };
+sb.auth.onAuthStateChange(()=>refreshAuth());
+
+/* ---------- 학급 ---------- */
+async function loadClasses(){
+  const { data, error } = await sb.from('classes').select('*').order('created_at');
+  if(error){ alert('학급 로드 오류: '+error.message); return; }
+  classes = data||[];
+  $('classSel').innerHTML = classes.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join('');
+  if(classes.length){ curClass = classes[0]; $('classSel').value=curClass.id; await loadClassData(); }
+  else { $('codeRow').innerHTML='<span class="muted">학급이 없어요. "+ 새 학급"으로 만들어 코드를 학생에게 알려주세요.</span>'; $('matrix').innerHTML=''; $('agg').innerHTML=''; }
+}
+$('classSel').onchange = async ()=>{ curClass = classes.find(c=>c.id===$('classSel').value); await loadClassData(); };
+$('newClass').onclick = async ()=>{
+  const name = prompt('학급 이름 (예: 2반 수학)'); if(!name) return;
+  const { data, error } = await sb.rpc('create_class', { p_name: name.trim() });
+  if(error){ alert('생성 오류: '+error.message); return; }
+  await loadClasses(); $('classSel').value=data.id; curClass=data; await loadClassData();
+};
+
+async function loadClassData(){
+  $('codeRow').innerHTML = `<span class="muted">학급 코드(학생에게 공유):</span> <span class="code">${esc(curClass.join_code)}</span>`;
+  const sRes = await sb.from('students').select('*').eq('class_id', curClass.id).order('name');
+  students = sRes.data||[];
+  const aRes = await sb.from('attempts').select('*, students!inner(id,name,class_id)').eq('students.class_id', curClass.id);
+  attempts = aRes.data||[];
+  const lessons = [...new Set(attempts.map(a=>a.lesson_id))].sort();
+  curLesson = lessons.includes(curLesson)? curLesson : (lessons[0]||null);
+  $('lessonSel').innerHTML = lessons.length? lessons.map(l=>`<option value="${l}">${esc(lt(l))}</option>`).join('') : '<option>응시 기록 없음</option>';
+  if(curLesson) $('lessonSel').value=curLesson;
+  renderMatrix(); renderAgg();
+}
+$('lessonSel').onchange = ()=>{ curLesson=$('lessonSel').value; renderMatrix(); renderAgg(); $('drill').classList.add('hidden'); };
+$('refresh').onclick = ()=>loadClassData();
+
+/* ---------- 집계 헬퍼 ---------- */
+function attemptsOf(studentId, q){
+  return attempts.filter(a=>a.student_id===studentId && a.lesson_id===curLesson && a.question_id===q)
+                 .sort((x,y)=>x.attempt_no-y.attempt_no);
+}
+function questionsOf(){
+  return [...new Set(attempts.filter(a=>a.lesson_id===curLesson).map(a=>a.question_id))]
+         .sort((a,b)=>parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,'')));
+}
+
+/* ---------- 매트릭스 ---------- */
+function renderMatrix(){
+  if(!curLesson || !students.length){ $('matrix').innerHTML='<p class="muted" style="margin-top:10px">아직 이 학급의 풀이 기록이 없어요.</p>'; return; }
+  const qs = questionsOf();
+  let h = '<table><tr><th>이름</th>'+qs.map(q=>`<th>${q.toUpperCase()}</th>`).join('')+'</tr>';
+  students.forEach(s=>{
+    h += `<tr><td class="name">${esc(s.name)}</td>`;
+    qs.forEach(q=>{
+      const seq = attemptsOf(s.id, q);
+      let cls='c-na', txt='—';
+      if(seq.length){
+        const correct = seq.find(a=>a.is_correct);
+        if(correct){ const t=correct.attempt_no; txt='✓('+t+')'; cls = t===1?'c-ok':'c-ok2'; }
+        else { txt='✗'; cls='c-no'; }
+      }
+      h += `<td class="cell ${cls}" data-s="${s.id}" data-q="${q}">${txt}</td>`;
+    });
+    h += '</tr>';
+  });
+  h += '</table>';
+  $('matrix').innerHTML = h;
+  $('matrix').querySelectorAll('.cell').forEach(td=>td.onclick=()=>drill(td.dataset.s, td.dataset.q));
+}
+function drill(sid, q){
+  const s = students.find(x=>x.id===sid); const seq = attemptsOf(sid, q);
+  if(!seq.length){ return; }
+  const correct = seq.find(a=>a.is_correct);
+  const head = correct? `${seq.length>1?seq.length+'번 만에 ':''}정답 ✓` : '끝내 못 맞힘 ✗';
+  let h = `<b style="font-family:var(--display)">${esc(s.name)} · ${q.toUpperCase()} — ${head}</b>`;
+  seq.forEach(a=>{
+    h += `<div class="step">${a.attempt_no}차 · "${esc(a.chosen_label||'')}" ` +
+         (a.is_correct? '<span class="ok">✓ 정답</span>' : `<span class="bad">✗</span> <span class="muted">${esc(a.misconception||'')}</span>`) + '</div>';
+  });
+  $('drill').innerHTML = h; $('drill').classList.remove('hidden');
+}
+
+/* ---------- 오개념 집계 ---------- */
+function renderAgg(){
+  if(!curLesson){ $('agg').innerHTML=''; return; }
+  const qs = questionsOf();
+  if(!qs.length){ $('agg').innerHTML='<p class="muted">기록 없음</p>'; return; }
+  let h='';
+  qs.forEach(q=>{
+    const wrongs = attempts.filter(a=>a.lesson_id===curLesson && a.question_id===q && !a.is_correct);
+    const byM = {};
+    wrongs.forEach(a=>{ const k=a.misconception||'(설명 없음)'; byM[k]=(byM[k]||0)+1; });
+    const items = Object.entries(byM).sort((a,b)=>b[1]-a[1]);
+    h += `<div style="margin:10px 0"><b style="font-family:var(--display)">${q.toUpperCase()}</b> `;
+    h += items.length? items.map(([m,n])=>`<span class="pill">${esc(m)} · ${n}</span>`).join('') : '<span class="muted">오답 없음 👍</span>';
+    h += '</div>';
+  });
+  $('agg').innerHTML = h;
+}
+
+refreshAuth();
+</script>
+</body>
+</html>
