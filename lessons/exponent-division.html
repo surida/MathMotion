@@ -101,6 +101,11 @@
   .qopt sup{font-size:.6em;vertical-align:super}
   .qopt:hover{transform:translate(-1px,-1px)}.qopt.right{background:#EAF7E6}.qopt.wrong{background:#FFEFEC}
   .qfeedback{text-align:center;font-family:var(--hand);font-size:22px;font-weight:700;margin-top:16px;min-height:30px}
+  .lvbadge{display:inline-block;font-family:var(--display);font-size:14px;border:2px solid var(--ink);border-radius:999px;padding:2px 10px;margin-right:8px;vertical-align:middle}
+  .lvbadge.b1{background:#E1F4DA}.lvbadge.b2{background:#CFE6FF}.lvbadge.b3{background:#FFD9B0}
+  .morebtn{display:block;margin:18px auto 0;font-family:var(--display);font-size:18px;border:3px solid var(--ink);background:var(--sun);border-radius:14px;padding:11px 24px;cursor:pointer;box-shadow:4px 4px 0 var(--ink)}
+  .morebtn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--ink)}
+  .cleared{text-align:center;font-family:var(--display);font-size:22px;color:var(--gator-d);margin-top:18px}
   .lawcard{display:grid;gap:14px;margin:10px 0}
   footer{text-align:center;padding:46px 18px 60px;color:var(--ink-soft);font-family:var(--hand);font-size:18px}
   .wcsim{text-align:center;margin:8px 0}
@@ -229,28 +234,46 @@
     <div class="lawcard reveal">
       <div class="law d"><span class="ic">✂️</span><div>aᵐ÷aⁿ = 위아래 a 짝 지우기. <b>m&gt;n</b>→a^(m−n) · <b>m=n</b>→1 · <b>m&lt;n</b>→1/a^(n−m)</div></div>
     </div>
-    <div class="panel reveal">
-      <h3>퀴즈 1 — 위가 많을 때</h3>
+    <!-- Lv1 기본 · 위가 많을 때 -->
+    <div class="panel reveal tier" data-tier="1">
+      <h3><span class="lvbadge b1">Lv1 · 기본</span>위가 많을 때</h3>
       <p><b>a⁵ ÷ a²</b> 를 약분하면?</p>
       <div class="qline">a<sup>5</sup> ÷ a<sup>2</sup> = ?</div>
       <div class="qopts" data-right="정답! 🎉 위 5개 중 2개가 아래 2개와 짝지어 지워지고 위에 3개 남아 a³ (지수 5−2=3)." data-wrong="앗! 약분하면 위에 5−2=3개 남아 a³ 이에요. 나눗셈은 지수를 빼요(곱셈이 더하기) ✂️">
-        <button class="qopt" data-correct="true">a<sup>3</sup> — 짝 2쌍 지우고 위에 3개 ✔</button>
-        <button class="qopt" data-correct="false">a<sup>7</sup> — 지수를 더했어요 (그건 곱셈)</button>
-        <button class="qopt" data-correct="false">a<sup>2.5</sup> — 지수를 나눴어요 (5÷2)</button>
+        <button class="qopt" data-correct="true">a<sup>3</sup></button>
+        <button class="qopt" data-correct="false">a<sup>7</sup></button>
+        <button class="qopt" data-correct="false">a<sup>2.5</sup></button>
       </div>
       <div class="qfeedback"></div>
+      <button class="morebtn" data-next="2" hidden>🔥 더 도전!</button>
     </div>
 
-    <div class="panel reveal" style="margin-top:16px">
-      <h3>퀴즈 2 — 아래가 많을 때</h3>
+    <!-- Lv2 응용 · 계수와 지수 따로 -->
+    <div class="panel tier" data-tier="2" hidden>
+      <h3><span class="lvbadge b2">Lv2 · 응용</span>계수와 지수, 따로!</h3>
+      <p><b>12a⁵ ÷ 4a²</b> 을 계산하면? (숫자는 숫자끼리 나누고, 지수는 빼요!)</p>
+      <div class="qline">12a<sup>5</sup> ÷ 4a<sup>2</sup> = ?</div>
+      <div class="qopts" data-right="정답! 🎉 계수는 12÷4=3, 지수는 5−2=3 → 3a³." data-wrong="앗! 계수는 나누고(12÷4=3), 지수는 빼요(5−2=3) → 3a³.">
+        <button class="qopt" data-correct="true">3a<sup>3</sup></button>
+        <button class="qopt" data-correct="false">3a<sup>2.5</sup></button>
+        <button class="qopt" data-correct="false">8a<sup>3</sup></button>
+      </div>
+      <div class="qfeedback"></div>
+      <button class="morebtn" data-next="3" hidden>🔥 더 도전!</button>
+    </div>
+
+    <!-- Lv3 심화 · 아래가 많을 때 -->
+    <div class="panel tier" data-tier="3" hidden>
+      <h3><span class="lvbadge b3">Lv3 · 심화 🔥</span>아래가 많을 때</h3>
       <p><b>a² ÷ a⁵</b> 를 약분하면? (위 2개, 아래 5개!)</p>
       <div class="qline">a<sup>2</sup> ÷ a<sup>5</sup> = ?</div>
       <div class="qopts" data-right="정답! 🎉 위 2개가 모두 지워지고 아래에 5−2=3개 남아 1/a³." data-wrong="앗! 위 2개가 다 지워지고 아래에 3개 남으니 1/a³ 이에요. 아래가 많으면 분수로! ✂️">
-        <button class="qopt" data-correct="true">1/a<sup>3</sup> — 아래에 3개 남음 ✔</button>
-        <button class="qopt" data-correct="false">a<sup>3</sup> — 어느 쪽이 남는지 헷갈렸어요</button>
-        <button class="qopt" data-correct="false">1/a<sup>7</sup> — 지수를 더했어요 (2+5)</button>
+        <button class="qopt" data-correct="true">1/a<sup>3</sup></button>
+        <button class="qopt" data-correct="false">a<sup>3</sup></button>
+        <button class="qopt" data-correct="false">1/a<sup>7</sup></button>
       </div>
       <div class="qfeedback"></div>
+      <div class="cleared" hidden>🏆 위·계수·아래까지 모두 약분 완료! 🐊</div>
     </div>
   </section>
 </main>
@@ -351,8 +374,16 @@ document.getElementById('nPlus').addEventListener('click',()=>{if(n<MAX){n++;ren
 document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
   const btn=e.target.closest('.qopt'); if(!btn)return;
   const fb=box.parentElement.querySelector('.qfeedback');
-  if(btn.dataset.correct==='true'){btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;}
+  if(btn.dataset.correct==='true'){
+    btn.classList.add('right');fb.style.color='var(--gator-d)';fb.innerHTML=box.dataset.right;
+    const tier=box.closest('.tier');
+    if(tier){const m=tier.querySelector('.morebtn');if(m)m.hidden=false;const d=tier.querySelector('.cleared');if(d)d.hidden=false;}
+  }
   else{btn.classList.add('wrong');fb.style.color='var(--red)';fb.innerHTML=box.dataset.wrong;}
+}));
+document.querySelectorAll('.morebtn').forEach(b=>b.addEventListener('click',()=>{
+  const next=document.querySelector('.tier[data-tier="'+b.dataset.next+'"]');
+  if(next){next.hidden=false;next.classList.add('reveal','in');b.hidden=true;next.scrollIntoView({behavior:'smooth',block:'center'});}
 }));
 
 render();

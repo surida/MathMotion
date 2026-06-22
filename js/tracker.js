@@ -3,7 +3,14 @@
  * 동작: 레슨 로드 시 미입장이면 입장 모달(닫기 불가) 강제 → 입장해야 사용.
  *       입장돼 있으면 조용히 기록(매 시도, 정답 시 잠금). best-effort. */
 (function () {
-  if (!window.MMStudent) return; // 공유 모듈 없으면 비활성(퀴즈는 정상 동작)
+  // 보기 순서 셔플 — 정답이 항상 같은 자리(1번)에 오는 것 방지. 추적 여부와 무관하게 항상.
+  document.querySelectorAll('.qopts').forEach(function (box) {
+    var opts = Array.prototype.slice.call(box.querySelectorAll('.qopt'));
+    for (var i = opts.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = opts[i]; opts[i] = opts[j]; opts[j] = t; }
+    opts.forEach(function (o) { box.appendChild(o); }); // appendChild는 기존 노드를 이동(이벤트 리스너 유지)
+  });
+
+  if (!window.MMStudent) return; // 공유 모듈 없으면 기록만 비활성(셔플·퀴즈는 정상 동작)
   var lessonId = (document.body && document.body.dataset.lesson) ||
                  (location.pathname.split('/').pop() || '').replace(/\.html$/, '') || 'unknown';
 

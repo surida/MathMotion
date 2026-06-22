@@ -294,13 +294,13 @@ presetsEl.addEventListener('click',e=>{const b=e.target.closest('.pbtn');if(!b)r
 
 /* quiz fill */
 document.getElementById('q1line').innerHTML=`${chip(5,3)} <span class="op">+</span> ${chip(2,3)} <span class="op">=</span> ?`;
-document.getElementById('q1a').innerHTML=`${chip(7,3)} <span style="font-size:.7em;color:var(--ink-soft)">계수만 더함</span>`;
-document.getElementById('q1b').innerHTML=`${chip(7,6)} <span style="font-size:.7em;color:var(--ink-soft)">근호 안도 더했어요</span>`;
-document.getElementById('q1c').innerHTML=`${chip(10,3)} <span style="font-size:.7em;color:var(--ink-soft)">계수를 곱했어요</span>`;
+document.getElementById('q1a').innerHTML=`${chip(7,3)}`;
+document.getElementById('q1b').innerHTML=`${chip(7,6)}`;
+document.getElementById('q1c').innerHTML=`${chip(10,3)}`;
 document.getElementById('q2line').innerHTML=`${R(4)} <span class="op">+</span> ${R(9)} <span class="op">=</span> ?`;
-document.getElementById('q2a').innerHTML=`5 <span style="font-size:.7em;color:var(--ink-soft)">2+3</span>`;
-document.getElementById('q2b').innerHTML=`${R(13)} <span style="font-size:.7em;color:var(--ink-soft)">근호 안끼리 더하면 안돼요</span>`;
-document.getElementById('q2c').innerHTML=`6 <span style="font-size:.7em;color:var(--ink-soft)">√36</span>`;
+document.getElementById('q2a').innerHTML=`5`;
+document.getElementById('q2b').innerHTML=`${R(13)}`;
+document.getElementById('q2c').innerHTML=`6`;
 
 document.querySelectorAll('.qopts').forEach(box=>box.addEventListener('click',e=>{
   const btn=e.target.closest('.qopt'); if(!btn)return;
