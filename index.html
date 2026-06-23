@@ -78,6 +78,11 @@
     padding:6px 18px;border-radius:999px;font-size:14px;transform:rotate(-1deg)}
   .menu-head .stat b{color:var(--sun)}
 
+  .reccard{background:#FFF7E6;border:4px solid var(--ink);border-radius:16px;box-shadow:5px 5px 0 var(--ink);padding:16px 16px 10px;margin-top:20px}
+  .rectitle{font-family:var(--display);font-size:18px;margin-bottom:10px}
+  .rec{display:flex;align-items:center;gap:12px;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:10px 12px;margin-bottom:8px;text-decoration:none;color:inherit;box-shadow:3px 3px 0 var(--ink)}
+  .rec .remoji{font-size:26px}.rec .rmeta{flex:1}.rec .rt{font-family:var(--display);display:block}.rec .rd{font-size:13px;color:var(--ink-soft)}
+  .rec .rgo{font-family:var(--display);font-size:14px;color:var(--blue);white-space:nowrap}
   .units{display:grid;gap:16px;grid-template-columns:1fr;margin-top:24px}
   @media(min-width:640px){.units{grid-template-columns:1fr 1fr}}
   .unit{background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:12px}
@@ -140,6 +145,7 @@
       <h2 id="menuTitle">중2 · 교학사</h2>
       <div class="stat" id="stat"></div>
     </div>
+    <div id="recs"></div>
     <div class="units" id="units"></div>
   </div>
   <footer>외우지 말고 <b>원리</b>로! 계속 새로운 레슨이 추가됩니다 ✏️</footer>
@@ -291,7 +297,26 @@ function showMenu(g,p){
   const chipG=document.getElementById('gradeChip');
   chipG.className='chip '+GRADE_CLS[g];
   renderUnits(g,p);
+  renderRecs();
   window.scrollTo(0,0);
+}
+
+/* ----- 약점 복습 추천 (학생) ----- */
+async function renderRecs(){
+  const el=document.getElementById('recs'); if(!el) return;
+  el.innerHTML='';
+  if(!window.MMStudent) return;
+  const stu=MMStudent.get(), sb=MMStudent.sb();
+  if(!stu||!sb) return;
+  try{
+    const {data,error}=await sb.rpc('my_weak_lessons',{p_student_id:stu.id});
+    if(error||!data) return;
+    const items=data.filter(d=>LESSONS[d.lesson_id]).slice(0,3).map(d=>{
+      const L=LESSONS[d.lesson_id];
+      return `<a class="rec" href="${L.href}"><span class="remoji">${L.emoji}</span><span class="rmeta"><span class="rt">${esc(L.title)}</span><span class="rd">지난번에 헷갈린 부분이에요 — 다시 도전!</span></span><span class="rgo">▶ 복습</span></a>`;
+    }).join('');
+    if(items) el.innerHTML=`<div class="reccard"><div class="rectitle">📌 ${esc(stu.name)} 복습 추천</div>${items}</div>`;
+  }catch(e){ /* best-effort */ }
 }
 document.getElementById('gradeChip').addEventListener('click',()=>showLanding(localStorage.getItem(KEY_G)));
 document.getElementById('pubChip').addEventListener('click',()=>showLanding(localStorage.getItem(KEY_G)));

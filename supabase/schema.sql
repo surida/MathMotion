@@ -168,3 +168,43 @@ grant execute on function public.record_attempt(uuid, text, text, int, text, boo
 -- 학급 생성은 로그인 교사만
 revoke all on function public.create_class(text) from public, anon;
 grant execute on function public.create_class(text) to authenticated;
+
+-- ---------- 8. 학생용 RPC: 약점 레슨 추천 ----------
+-- (학생은 본인 attempts를 직접 SELECT 못 하므로 definer 함수로 요약만 반환)
+-- 약점 점수: 문항이 '못 맞힘'=2, '여러 번 만에 맞힘(시도≥2)'=1 → 레슨별 합산
+create or replace function public.my_weak_lessons(p_student_id uuid)
+returns table(lesson_id text, score int, miss text)
+language sql
+security definer
+set search_path = public
+as $$
+  with per_q as (
+    select a.lesson_id, a.question_id,
+           bool_or(a.is_correct) as solved,
+           max(a.attempt_no)     as tries
+    from public.attempts a
+    where a.student_id = p_student_id
+    group by a.lesson_id, a.question_id
+  ),
+  scored as (
+    select lesson_id,
+           sum(case when not solved then 2 when tries >= 2 then 1 else 0 end) as score
+    from per_q
+    group by lesson_id
+  ),
+  miss as (
+    select lesson_id, misconception,
+           row_number() over (partition by lesson_id order by count(*) desc) as rn
+    from public.attempts
+    where student_id = p_student_id and is_correct = false and misconception is not null
+    group by lesson_id, misconception
+  )
+  select s.lesson_id, s.score::int, m.misconception as miss
+  from scored s
+  left join miss m on m.lesson_id = s.lesson_id and m.rn = 1
+  where s.score > 0
+  order by s.score desc, s.lesson_id
+  limit 5;
+$$;
+revoke all on function public.my_weak_lessons(uuid) from public, anon, authenticated;
+grant execute on function public.my_weak_lessons(uuid) to anon, authenticated;

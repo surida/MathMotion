@@ -183,6 +183,19 @@ function renderMatrix(){
   $('matrix').innerHTML = h;
   $('matrix').querySelectorAll('.cell').forEach(td=>td.onclick=()=>drill(td.dataset.s, td.dataset.q));
 }
+// 학생의 레슨별 약점 점수 (못 맞힘=2, 여러 번 만에 맞힘=1)
+function weakOf(sid){
+  const byQ={};
+  attempts.filter(a=>a.student_id===sid).forEach(a=>{
+    const k=a.lesson_id+'|'+a.question_id;
+    byQ[k]=byQ[k]||{l:a.lesson_id,solved:false,tries:0};
+    if(a.is_correct) byQ[k].solved=true;
+    byQ[k].tries=Math.max(byQ[k].tries,a.attempt_no);
+  });
+  const score={};
+  Object.values(byQ).forEach(o=>{const w=!o.solved?2:(o.tries>=2?1:0); if(w) score[o.l]=(score[o.l]||0)+w;});
+  return Object.entries(score).sort((a,b)=>b[1]-a[1]);
+}
 function drill(sid, q){
   const s = students.find(x=>x.id===sid); const seq = attemptsOf(sid, q);
   if(!seq.length){ return; }
@@ -193,6 +206,11 @@ function drill(sid, q){
     h += `<div class="step">${a.attempt_no}차 · "${esc(a.chosen_label||'')}" ` +
          (a.is_correct? '<span class="ok">✓ 정답</span>' : `<span class="bad">✗</span> <span class="muted">${esc(a.misconception||'')}</span>`) + '</div>';
   });
+  const weak = weakOf(sid);
+  if(weak.length){
+    h += `<div style="margin-top:10px;border-top:1px dashed var(--grid);padding-top:8px"><b style="font-family:var(--display)">📌 ${esc(s.name)} 약점 요약</b> ` +
+         weak.slice(0,5).map(([l,sc])=>`<span class="pill">${esc(lt(l))} · ${sc}</span>`).join('') + '</div>';
+  }
   $('drill').innerHTML = h; $('drill').classList.remove('hidden');
 }
 
