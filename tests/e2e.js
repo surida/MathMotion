@@ -39,6 +39,8 @@ function check(name, ok, msg) {
 const SEED = () => {
   localStorage.setItem('mm-student', JSON.stringify({ id: 'test', name: '테스터', code: 'TEST' }));
   sessionStorage.setItem('mm-session', 'test');
+  localStorage.setItem('mm-grade', '중2');   // 허브가 랜딩 대신 메뉴를 띄우도록
+  localStorage.setItem('mm-pub', '교학사');
 };
 
 async function newPage(browser, { seed } = {}) {
@@ -151,6 +153,37 @@ async function correctIndex(page, boxSel) {
         check(`${tag}: 보기 셔플(정답 위치 가변)`, seen.has('na') || seen.size >= 2, '관측 위치=' + [...seen].join(','));
         await page._ctx.close();
       }
+    }
+    // ---- 게이미피케이션 (뱃지·스트릭) : 한 컨텍스트에서 끝까지 ----
+    {
+      const tier = 'simultaneous-equations';
+      const page = await newPage(browser, { seed: true });
+      await page.goto(base + '/lessons/' + tier + '.html', { waitUntil: 'load' });
+      await waitFor(page, '.qopts .qopt');
+      // Lv1: 오답 1개 클릭 후 정답 → 첫 정답 + 오뚝이
+      await page.$eval('.tier[data-tier="1"] .qopt[data-correct="false"]', b => b.click());
+      await page.$eval('.tier[data-tier="1"] .qopt[data-correct="true"]', b => b.click());
+      // Lv1→Lv2→Lv3 정답으로 완주
+      await page.$eval('.tier[data-tier="1"] .morebtn', b => b.click());
+      await page.$eval('.tier[data-tier="2"] .qopt[data-correct="true"]', b => b.click());
+      await page.$eval('.tier[data-tier="2"] .morebtn', b => b.click());
+      await page.$eval('.tier[data-tier="3"] .qopt[data-correct="true"]', b => b.click());
+      const g = await page.evaluate(() => JSON.parse(localStorage.getItem('mm-game-test') || '{}'));
+      check('게임: 첫 정답 뱃지', !!(g.badges && g.badges.firstCorrect));
+      check('게임: 오뚝이 뱃지(오답 후 정답)', !!(g.badges && g.badges.comeback));
+      check('게임: 레슨 완주 뱃지', !!(g.badges && g.badges.lessonClear));
+      check('게임: 스트릭 ≥1일', (g.streak || 0) >= 1);
+      check('게임: cleared에 레슨 기록', (g.cleared || []).indexOf(tier) >= 0);
+      // 같은 컨텍스트로 허브 → 내 기록 띠 + 획득 뱃지 표시
+      await page.goto(base + '/', { waitUntil: 'load' });
+      await waitFor(page, '#menu:not([hidden]) .mm-gcard', 4000).catch(() => {});
+      const hub = await page.evaluate(() => {
+        const card = document.querySelector('.mm-gcard');
+        return { card: !!card, on: document.querySelectorAll('.mm-badge.on').length };
+      });
+      check('게임: 허브 내 기록 띠 표시', hub.card);
+      check('게임: 허브 획득 뱃지 ≥1', hub.on >= 1);
+      await page._ctx.close();
     }
   } catch (e) {
     console.log('테스트 실행 오류:', e.message);

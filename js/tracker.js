@@ -38,6 +38,11 @@
       box.dataset.mmLocked = '1';
       opts.forEach(function (b) { b.style.pointerEvents = 'none'; });
     }
+    // 게이미피케이션(뱃지·스트릭) — Supabase 없이도 동작하도록 기록보다 먼저, dataset 신호로 판정
+    if (window.MMGame) {
+      var allSolved = boxes.length > 0 && boxes.every(function (b) { return b.dataset.mmLocked === '1'; });
+      MMGame.onAnswer({ correct: correct, tries: tries, allSolved: allSolved, lessonId: lessonId });
+    }
     var stu = MMStudent.get(); if (!stu) return;       // 게이트가 보장하지만 안전망
     var cl = MMStudent.sb(); if (!cl) return;
     try {

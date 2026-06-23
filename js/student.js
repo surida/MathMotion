@@ -129,3 +129,90 @@
 
   window.MMStudent = { get: get, set: set, clear: clear, sb: sb, gate: gate, require: require_, openEntry: openEntry, pill: pill };
 })();
+
+/* ===== 가벼운 게이미피케이션 (window.MMGame) — localStorage 기반, 백엔드 0 =====
+ * 허브와 레슨 모두 student.js를 로드하므로 여기 두면 새 <script> 없이 양쪽에서 쓰임.
+ * 상태는 학생별 네임스페이스(mm-game-<id>). 감지는 tracker가 넘기는 신호(정답/시도수/완주)만 사용. */
+(function () {
+  var BADGES = {
+    firstCorrect: { emo: '🎯', name: '첫 정답' },
+    lessonClear:  { emo: '🏆', name: '레슨 완주' },
+    comeback:     { emo: '💪', name: '오뚝이' },
+    collector:    { emo: '🦊', name: '수집가' },
+    streak3:      { emo: '🔥', name: '3일 연속' },
+    streak7:      { emo: '⭐', name: '7일 연속' }
+  };
+  var ORDER = ['firstCorrect', 'lessonClear', 'comeback', 'collector', 'streak3', 'streak7'];
+  function esc(t) { return (t || '').replace(/[&<>"]/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]); }); }
+  function sid() { try { var s = window.MMStudent && MMStudent.get(); return s ? s.id : null; } catch (e) { return null; } }
+  function key() { var id = sid(); return id ? ('mm-game-' + id) : null; }
+  function def() { return { streak: 0, best: 0, lastDay: '', badges: {}, cleared: [] }; }
+  function load() { var k = key(); if (!k) return null; try { return JSON.parse(localStorage.getItem(k) || 'null') || def(); } catch (e) { return def(); } }
+  function save(g) { var k = key(); if (k) try { localStorage.setItem(k, JSON.stringify(g)); } catch (e) {} }
+  function dayStr(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
+  function today() { return dayStr(new Date()); }
+  function yesterday() { var d = new Date(); d.setDate(d.getDate() - 1); return dayStr(d); }
+
+  var injected = false;
+  function injectCSS() {
+    if (injected) return; injected = true;
+    var css = '' +
+      '.mm-toast{position:fixed;left:50%;top:18px;transform:translateX(-50%) translateY(-12px);z-index:100000;background:#FFC847;border:3px solid #2B2520;border-radius:14px;box-shadow:4px 4px 0 #2B2520;font-family:"Jua",sans-serif;font-size:17px;color:#2B2520;padding:10px 18px;opacity:0;transition:opacity .25s,transform .25s}' +
+      '.mm-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}' +
+      '.mm-gcard{background:#FFF7E6;border:4px solid #2B2520;border-radius:16px;box-shadow:5px 5px 0 #2B2520;padding:12px 14px;margin-top:20px}' +
+      '.mm-grow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}' +
+      '.mm-flame{font-family:"Jua",sans-serif;font-size:17px;margin-right:6px}' +
+      '.mm-badge{font-size:24px;filter:grayscale(1) opacity(.35);transition:filter .2s}' +
+      '.mm-badge.on{filter:none}';
+    var s = document.createElement('style'); s.textContent = css; (document.head || document.documentElement).appendChild(s);
+  }
+  var q = 0;
+  function toast(msg) {
+    var delay = q * 250; q++;
+    setTimeout(function () {
+      injectCSS();
+      var t = document.createElement('div'); t.className = 'mm-toast'; t.textContent = msg;
+      (document.body || document.documentElement).appendChild(t);
+      requestAnimationFrame(function () { t.classList.add('show'); });
+      setTimeout(function () { t.classList.remove('show'); setTimeout(function () { t.remove(); }, 300); }, 2400);
+      q = Math.max(0, q - 1);
+    }, delay);
+  }
+  function award(g, id) { if (g.badges[id]) return false; g.badges[id] = Date.now(); toast(BADGES[id].emo + ' ' + BADGES[id].name + ' 뱃지 획득!'); return true; }
+  function touchStreak(g) {
+    var t = today();
+    if (g.lastDay === t) return false;
+    if (g.lastDay === yesterday()) g.streak = (g.streak || 0) + 1; else g.streak = 1;
+    g.lastDay = t; if ((g.streak || 0) > (g.best || 0)) g.best = g.streak;
+    return true;
+  }
+  // tracker가 매 답마다 호출: {correct, tries, allSolved, lessonId}
+  function onAnswer(o) {
+    var g = load(); if (!g) return;
+    var changed = touchStreak(g);
+    if (changed && g.streak >= 2 && g.streak !== 3 && g.streak !== 7) toast('🔥 ' + g.streak + '일 연속 학습!');
+    if (g.streak >= 3) award(g, 'streak3');
+    if (g.streak >= 7) award(g, 'streak7');
+    if (o && o.correct) {
+      award(g, 'firstCorrect');
+      if (o.tries >= 2) award(g, 'comeback');
+      if (o.allSolved && o.lessonId) {
+        g.cleared = g.cleared || [];
+        if (g.cleared.indexOf(o.lessonId) < 0) {
+          g.cleared.push(o.lessonId);
+          award(g, 'lessonClear');
+          if (g.cleared.length >= 5) award(g, 'collector');
+        }
+      }
+    }
+    save(g);
+  }
+  function renderHub(el) {
+    if (!el) return;
+    var g = load(); if (!g) { el.innerHTML = ''; return; }
+    injectCSS();
+    var chips = ORDER.map(function (id) { return '<span class="mm-badge' + (g.badges[id] ? ' on' : '') + '" title="' + esc(BADGES[id].name) + '">' + BADGES[id].emo + '</span>'; }).join('');
+    el.innerHTML = '<div class="mm-gcard"><div class="mm-grow"><span class="mm-flame">🔥 ' + (g.streak || 0) + '일 연속</span>' + chips + '</div></div>';
+  }
+  window.MMGame = { onAnswer: onAnswer, renderHub: renderHub, load: load, BADGES: BADGES };
+})();

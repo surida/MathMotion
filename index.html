@@ -145,6 +145,7 @@
       <h2 id="menuTitle">중2 · 교학사</h2>
       <div class="stat" id="stat"></div>
     </div>
+    <div id="game"></div>
     <div id="recs"></div>
     <div class="units" id="units"></div>
   </div>
@@ -297,6 +298,7 @@ function showMenu(g,p){
   const chipG=document.getElementById('gradeChip');
   chipG.className='chip '+GRADE_CLS[g];
   renderUnits(g,p);
+  if(window.MMGame) MMGame.renderHub(document.getElementById('game'));
   renderRecs();
   window.scrollTo(0,0);
 }
